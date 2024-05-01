@@ -234,3 +234,16 @@ Vector2f operator-(const Point2f& lhs, const Point2f& rhs)
 	Vector2f v{ lhs.x - rhs.x, lhs.y - rhs.y };
 	return v;
 }
+
+Ellipsef& operator+=(Ellipsef& lhs, const Vector2f& rhs)
+{
+	lhs.center += rhs;
+	return lhs;
+}
+
+Rectf& operator+=(Rectf& lhs, const Vector2f& rhs)
+{
+	lhs.left += rhs.x;
+	lhs.bottom += rhs.y;
+	return lhs;
+}

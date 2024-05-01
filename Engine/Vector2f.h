@@ -107,3 +107,8 @@ Point2f operator-(Point2f lhs, const Vector2f& rhs);
 // The difference vector between 2 points
 Vector2f operator-( const Point2f& lhs, const Point2f& rhs);
 
+//translating an ellipse
+Ellipsef& operator+=(Ellipsef& lhs, const Vector2f& rhs);
+
+//translating a rect
+Rectf& operator+=(Rectf& lhs, const Vector2f& rhs);
