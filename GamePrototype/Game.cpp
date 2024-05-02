@@ -18,8 +18,8 @@ void Game::Initialize( )
 {
 	m_StunningText = new Texture("Stunning next turn", "DIN-Light.otf", 30, Color4f{ 1,1,1,1 });
 
-	m_BossGrid = Grid(5, 5, 60, Vector2f{ 500,120 });
-	m_HeroGrid = Grid(5, 5, 60, Vector2f{ 100,120 });
+	m_BossGrid = Grid(5, 5, 60, Vector2f{ 480,120 });
+	m_HeroGrid = Grid(5, 5, 60, Vector2f{ 80,120 });
 
 	m_Mage = new Mage{ POINT{0,2},&m_BossGrid };
 	m_Knight = new Knight{ POINT{4,2},&m_HeroGrid,&m_BossGrid};
@@ -37,7 +37,6 @@ void Game::Cleanup( )
 
 void Game::Update( float elapsedSec )
 {
-	// Check keyboard state
 	m_Mage->Update(elapsedSec);
 	m_Knight->Update(elapsedSec);
 	if (m_Between)
@@ -63,25 +62,10 @@ void Game::Draw( ) const
 
 void Game::ProcessKeyDownEvent( const SDL_KeyboardEvent & e )
 {
-	//std::cout << "KEYDOWN event: " << e.keysym.sym << std::endl;
 }
 
 void Game::ProcessKeyUpEvent( const SDL_KeyboardEvent& e )
 {
-	//std::cout << "KEYUP event: " << e.keysym.sym << std::endl;
-	//switch ( e.keysym.sym )
-	//{
-	//case SDLK_LEFT:
-	//	//std::cout << "Left arrow key released\n";
-	//	break;
-	//case SDLK_RIGHT:
-	//	//std::cout << "`Right arrow key released\n";
-	//	break;
-	//case SDLK_1:
-	//case SDLK_KP_1:
-	//	//std::cout << "Key 1 released\n";
-	//	break;
-	//}
 	if (m_Between) return;
 	switch (e.keysym.sym)
 	{
@@ -112,36 +96,20 @@ void Game::ProcessKeyUpEvent( const SDL_KeyboardEvent& e )
 
 void Game::ProcessMouseMotionEvent( const SDL_MouseMotionEvent& e )
 {
-	//std::cout << "MOUSEMOTION event: " << e.x << ", " << e.y << std::endl;
 }
 
 void Game::ProcessMouseDownEvent( const SDL_MouseButtonEvent& e )
 {
-	//std::cout << "MOUSEBUTTONDOWN event: ";
 	switch (e.button)
 	{
 	case SDL_BUTTON_LEFT:
 		Point2f mousePos = Point2f{ float(e.x), float(e.y) };
 		break;
 	}
-	
 }
 
 void Game::ProcessMouseUpEvent( const SDL_MouseButtonEvent& e )
 {
-	//std::cout << "MOUSEBUTTONUP event: ";
-	//switch ( e.button )
-	//{
-	//case SDL_BUTTON_LEFT:
-	//	std::cout << " left button " << std::endl;
-	//	break;
-	//case SDL_BUTTON_RIGHT:
-	//	std::cout << " right button " << std::endl;
-	//	break;
-	//case SDL_BUTTON_MIDDLE:
-	//	std::cout << " middle button " << std::endl;
-	//	break;
-	//}
 }
 
 void Game::ClearBackground( ) const
