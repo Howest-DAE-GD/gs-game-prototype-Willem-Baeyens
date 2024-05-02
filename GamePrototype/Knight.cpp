@@ -2,16 +2,19 @@
 #include "Knight.h"
 #include "utils.h"
 
-Knight::Knight(POINT gridPos,Grid* gridPtr):
+Knight::Knight(POINT gridPos,Grid* GridPtr,Grid* enemyGridPtr):
 	m_Grid_Position{gridPos},
 	m_Color{ 211,211,211,1},
 	m_NextMove{1},
 	m_Attacking{false},
 	m_AttackDuration{0.4f},
 	m_AttackTimer{0.f},
-	m_EnemyGridPtr{gridPtr},
-	m_Stunned{false}
+	m_GridPtr{GridPtr},
+	m_EnemyGridPtr{enemyGridPtr},
+	m_Stunned{false},
+	m_MaxRowIndex{ GridPtr->GetRowCount() - 1}
 {
+
 }
 
 void Knight::Update(float elapsedSec)
@@ -52,14 +55,13 @@ void Knight::DoTurn()
 	if (not m_Stunned)
 	{
 		m_Grid_Position.y += m_NextMove;
-		switch (m_Grid_Position.y)
+		if (m_Grid_Position.y == 0)
 		{
-		case 0:
 			m_NextMove = 1;
-			break;
-		case 2:
+		}
+		if (m_Grid_Position.y == m_MaxRowIndex)
+		{
 			m_NextMove = -1;
-			break;
 		}
 	}
 	m_Attacking = true;

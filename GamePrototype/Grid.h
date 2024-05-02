@@ -16,6 +16,9 @@ public:
 	int GetSquareSize() const;
 	Vector2f GetLocation() const;
 
+	int GetRowCount() const;
+	int GetColumnCount() const;
+
 	std::vector<POINT> GetCreaturePositions() const;
 private:
 	int m_ColumnCount;

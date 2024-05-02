@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Game.h"
 #include "utils.h"
+#include <iostream>
 
 Game::Game( const Window& window ) 
 	:BaseGame{ window }
@@ -17,12 +18,12 @@ void Game::Initialize( )
 {
 	m_StunningText = new Texture("Stunning next turn", "DIN-Light.otf", 30, Color4f{ 1,1,1,1 });
 
-	m_BossGrid = Grid(2, 3, 120, Vector2f{ 550,100 });
-	m_HeroGrid = Grid(2, 3, 120, Vector2f{ 100,100 });
+	m_BossGrid = Grid(5, 5, 60, Vector2f{ 500,120 });
+	m_HeroGrid = Grid(5, 5, 60, Vector2f{ 100,120 });
 
-	m_Mage = new Mage{ POINT{0,1},&m_BossGrid };
-	m_Knight = new Knight{ POINT{1,1},&m_BossGrid};
-	m_Boss = new Boss{ POINT{0,1},m_Knight };
+	m_Mage = new Mage{ POINT{0,2},&m_BossGrid };
+	m_Knight = new Knight{ POINT{4,2},&m_HeroGrid,&m_BossGrid};
+	m_Boss = new Boss{ POINT{0,2},m_Knight,&m_BossGrid };
 
 	m_BossGrid.AddCreature(m_Boss);
 
@@ -81,6 +82,7 @@ void Game::ProcessKeyUpEvent( const SDL_KeyboardEvent& e )
 	//	//std::cout << "Key 1 released\n";
 	//	break;
 	//}
+	if (m_Between) return;
 	switch (e.keysym.sym)
 	{
 	case SDLK_RETURN:
@@ -154,9 +156,14 @@ void Game::NextTurnHero()
 	m_Mage->DoTurn();
 	m_Between = false;
 	m_Timer = 0;
+
+	std::cout << m_TurnCounter << "\n";
+
 }
 void Game::NextTurnBoss()
 {
+	if (not m_Boss->CheckMove(m_BossMove)) return;
+
 	++m_TurnCounter;
 
 	m_Mage->SetLastBossPosition(m_Boss->GetGridPosition());

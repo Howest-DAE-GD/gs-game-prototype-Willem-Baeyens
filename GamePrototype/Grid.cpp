@@ -61,6 +61,18 @@ Vector2f Grid::GetLocation() const
 	return m_Location;
 }
 
+int Grid::GetRowCount() const
+{
+	return m_RowCount;
+}
+
+int Grid::GetColumnCount() const
+{
+	return m_ColumnCount;
+}
+
+
+
 std::vector<POINT> Grid::GetCreaturePositions() const
 {
 	std::vector<POINT> positions{};
