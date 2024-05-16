@@ -17,9 +17,9 @@ Boss::Boss(POINT gridPos,Knight* knightPtr, Grid* gridPtr,Grid* enemyGridPtr):
 	m_Attacking{false},
 	m_DidDamage{false},
 	m_AttackLocations{},
-	m_AttackPatternVect{BossMove::null,BossMove::columnAttack,BossMove::null,BossMove::rowAttack},
+	m_AttackPatternVect{BossMove::null,BossMove::rowAttack,BossMove::null,BossMove::columnAttack},
 	m_AttackIndex{}
-{
+{	
 	m_Rect = Rectf{ 600,200,100,100 };
 	m_Color = Color4f{ 135 / 255.f, 12 / 255.f, 20 / 255.f,1.f };
 }
@@ -140,8 +140,21 @@ void Boss::ColumAttack()
 {
 	for (int index = 0; index < m_EnemyGridPtr->GetRowCount(); ++index)
 	{
-		POINT location{ m_GridPosition.x,index };
+		POINT location{ m_EnemyGridPtr->GetColumnCount()-1-m_GridPosition.x,index };
 		m_AttackLocations.push_back(location);
+	}
+	m_DidDamage = false;
+}
+
+void Boss::CometAttack()
+{
+	for (int rowIndex{ 1 }; rowIndex < m_EnemyGridPtr->GetRowCount() - 1; ++rowIndex)
+	{
+		for (int columnIndex{ 1 }; columnIndex < m_EnemyGridPtr->GetColumnCount() - 1; ++columnIndex)
+		{
+			POINT location{ columnIndex,rowIndex };
+			m_AttackLocations.push_back(location);
+		}
 	}
 	m_DidDamage = false;
 }
@@ -194,6 +207,10 @@ void Boss::Attack()
 		break;
 	case BossMove::rowAttack:
 		RowAttack();
+		m_Attacking = true;
+		break;
+	case BossMove::cometAttack:
+		CometAttack();
 		m_Attacking = true;
 		break;
 	}
