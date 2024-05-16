@@ -23,7 +23,7 @@ void Game::Initialize( )
 
 	m_Mage = new Mage{ POINT{0,2},&m_BossGrid };
 	m_Knight = new Knight{ POINT{4,2},&m_HeroGrid,&m_BossGrid};
-	m_Boss = new Boss{ POINT{0,2},m_Knight,&m_BossGrid };
+	m_Boss = new Boss{ POINT{0,2},m_Knight,&m_BossGrid, &m_HeroGrid};
 
 	m_BossGrid.AddCreature(m_Boss);
 
@@ -39,6 +39,7 @@ void Game::Update( float elapsedSec )
 {
 	m_Mage->Update(elapsedSec);
 	m_Knight->Update(elapsedSec);
+	m_BossDoneAttacking = m_Boss->Update(elapsedSec);
 	if (m_Between)
 	{
 		m_Timer += elapsedSec;
@@ -54,10 +55,10 @@ void Game::Draw( ) const
 	ClearBackground( );
 	m_BossGrid.Draw();
 	m_HeroGrid.Draw();
-	if (m_Stunning and m_Boss->GetStunCounter() == 2)
-	{
-		m_StunningText->Draw(Point2f{ 325.f,50.f });
-	}
+	//if (m_Stunning and m_Boss->GetStunCounter() == 2)
+	//{
+	//	m_StunningText->Draw(Point2f{ 325.f,50.f });
+	//}
 }
 
 void Game::ProcessKeyDownEvent( const SDL_KeyboardEvent & e )
@@ -66,6 +67,8 @@ void Game::ProcessKeyDownEvent( const SDL_KeyboardEvent & e )
 
 void Game::ProcessKeyUpEvent( const SDL_KeyboardEvent& e )
 {
+	if (m_Boss->GetHealth() <= 0) return;
+	if (not m_BossDoneAttacking) return;
 	if (m_Between) return;
 	switch (e.keysym.sym)
 	{
@@ -88,9 +91,9 @@ void Game::ProcessKeyUpEvent( const SDL_KeyboardEvent& e )
 		m_BossMove = { 0,-1};
 		NextTurnBoss();
 		break;
-	case SDLK_SPACE:
-		m_Stunning = !m_Stunning;
-		break;
+	//case SDLK_SPACE:
+	//	m_Stunning = !m_Stunning;
+	//	break;
 	}
 }
 
@@ -137,11 +140,11 @@ void Game::NextTurnBoss()
 	m_Mage->SetLastBossPosition(m_Boss->GetGridPosition());
 
 	m_Boss->Move(m_BossMove);
-	if (m_Stunning)
-	{
-		m_Boss->Stun();
-		m_Stunning = false;
-	}
+	//if (m_Stunning)
+	//{
+	//	m_Boss->Stun();
+	//	m_Stunning = false;
+	//}
 	m_BossMove = {};
 
 	m_Between = true;

@@ -19,6 +19,8 @@ public:
 	int GetRowCount() const;
 	int GetColumnCount() const;
 
+	Rectf GetRectAtPosition(POINT position) const;
+
 	std::vector<POINT> GetCreaturePositions() const;
 private:
 	int m_ColumnCount;

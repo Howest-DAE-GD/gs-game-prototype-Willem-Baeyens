@@ -12,13 +12,17 @@ Knight::Knight(POINT gridPos,Grid* GridPtr,Grid* enemyGridPtr):
 	m_GridPtr{GridPtr},
 	m_EnemyGridPtr{enemyGridPtr},
 	m_Stunned{false},
-	m_MaxRowIndex{ GridPtr->GetRowCount() - 1}
+	m_MaxRowIndex{ GridPtr->GetRowCount() - 1},
+	m_MaxHealth{5},
+	m_CurrentHealth{m_MaxHealth}
 {
 
 }
 
 void Knight::Update(float elapsedSec)
 {
+	if (not IsAlive()) return;
+
 	if (m_Attacking)
 	{
 		m_AttackTimer += elapsedSec;
@@ -42,16 +46,21 @@ POINT Knight::GetGridPosition() const
 
 void Knight::Draw(Rectf rect) const
 {
+	if (not IsAlive()) return;
+
 	Creature::Draw(rect);
 	if (m_Attacking)
 	{
 		Rectf attackRect{ rect.left+5.f,rect.bottom + rect.height / 3,rect.width * 3.5f,rect.height / 3 };
 		utils::FillRect(attackRect);
 	}
+	DrawHealth(rect, m_MaxHealth, m_CurrentHealth);
 }
 
 void Knight::DoTurn()
 {
+	if (not IsAlive()) return;
+
 	if (not m_Stunned)
 	{
 		m_Grid_Position.y += m_NextMove;
@@ -67,6 +76,16 @@ void Knight::DoTurn()
 	m_Attacking = true;
 	m_EnemyGridPtr->DoDamage({ 0,m_Grid_Position.y }, 1);
 	m_Stunned = false;
+}
+
+void Knight::TakeDamage(int damage)
+{
+	m_CurrentHealth -= damage;
+}
+
+bool Knight::IsAlive() const
+{
+	return m_CurrentHealth > 0;
 }
 
 void Knight::Stun()

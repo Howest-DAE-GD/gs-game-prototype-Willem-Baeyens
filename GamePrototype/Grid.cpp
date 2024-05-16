@@ -22,8 +22,7 @@ void Grid::Draw() const
 	{
 		for (int colIndex = 0; colIndex < m_ColumnCount; ++colIndex)
 		{
-			Rectf rect{ (float)colIndex * m_SquareSize,(float)rowIndex * m_SquareSize,(float)m_SquareSize,(float)m_SquareSize };
-			rect += m_Location;
+			Rectf rect = GetRectAtPosition(POINT{ colIndex,rowIndex });
 			utils::DrawRect(rect);
 		}
 	}
@@ -31,13 +30,9 @@ void Grid::Draw() const
 	for (Creature* creaturePtr : m_CreaturePtrVect)
 	{
 		POINT gridPos = creaturePtr->GetGridPosition();
-		Rectf rect{ (float)gridPos.x * m_SquareSize,(float)gridPos.y * m_SquareSize,(float)m_SquareSize,(float)m_SquareSize };
-		rect += m_Location;
+		Rectf rect = GetRectAtPosition(gridPos);
 		creaturePtr->Draw(rect);
 	}
-
-
-
 }
 
 void Grid::DoDamage(POINT gridPosition, int damage)
@@ -69,6 +64,14 @@ int Grid::GetRowCount() const
 int Grid::GetColumnCount() const
 {
 	return m_ColumnCount;
+}
+
+Rectf Grid::GetRectAtPosition(POINT position) const
+{
+	Rectf rect{ (float)position.x * m_SquareSize,(float)position.y * m_SquareSize,(float)m_SquareSize,(float)m_SquareSize };
+	rect += m_Location;
+
+	return rect;
 }
 
 

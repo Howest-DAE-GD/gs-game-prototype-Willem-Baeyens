@@ -49,5 +49,6 @@ private:
 	float m_Timer{ 0 };
 	bool m_Between{ false };
 	bool m_Stunning{ false };
+	bool m_BossDoneAttacking{ true };
 	Texture* m_StunningText;
 };

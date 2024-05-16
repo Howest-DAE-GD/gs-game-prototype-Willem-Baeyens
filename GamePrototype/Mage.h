@@ -12,6 +12,9 @@ public:
 	void Update(float elapsedSec);
 
 	void DoTurn();
+	virtual void TakeDamage(int damage);
+
+	bool IsAlive() const;
 
 	void SetLastBossPosition(POINT position);
 
@@ -25,4 +28,6 @@ private:
 	Fireball m_Fireball;
 	bool m_Charging;
 	POINT m_LastBossPosition;
+	int m_MaxHealth;
+	int m_CurrentHealth;
 };

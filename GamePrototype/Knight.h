@@ -15,6 +15,9 @@ public:
 	virtual void Draw(Rectf rect) const override;
 
 	void DoTurn();
+	virtual void TakeDamage(int damage);
+
+	bool IsAlive() const;
 
 	void Stun();
 private:
@@ -28,4 +31,6 @@ private:
 	Grid* m_EnemyGridPtr;
 	Grid* m_GridPtr;
 	bool m_Stunned;
+	int  m_MaxHealth;
+	int  m_CurrentHealth;
 };
