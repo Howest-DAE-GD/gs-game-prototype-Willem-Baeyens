@@ -32,24 +32,27 @@ private:
 	void Initialize();
 	void Cleanup();
 	void ClearBackground() const;
-	void NextTurnHero();
-	void NextTurnBoss();
+
+
+	void BossMove();
+	void HeroMove();
+	void BossAttack();
+	void HeroAttack();
 
 	Mage* m_Mage;
 	Boss* m_Boss;
 	Knight* m_Knight;
-	//Grid m_BossGrid;
-	//Grid m_HeroGrid;
 	Grid* m_Grid1Ptr;
 
 	POINT m_BossMove{};
-
 	int m_TurnCounter{ 0 };
 
-	float m_TimeBetweenHeroBoss{ 0.3f };
-	float m_Timer{ 0 };
-	bool m_Between{ false };
-	bool m_Stunning{ false };
-	bool m_BossDoneAttacking{ true };
+
 	Texture* m_StunningText;
+
+	float m_TimerBetweenMove{ 0.f };
+	float m_TimerBetweenMoveAttack{ 0.f };
+	float m_TimerBetweenAttack{ 0.f };
+
+	bool m_TurnInProgress{ false };
 };

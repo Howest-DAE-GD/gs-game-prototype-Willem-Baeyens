@@ -683,6 +683,11 @@ bool utils::IntersectRectLine(const Rectf& r, const Point2f& p1, const Point2f& 
 	return true;
 }
 
+Point2f utils::GetCenter(const Rectf& rect)
+{
+	return Point2f{rect.left + rect.width/2,rect.bottom + rect.height/2};
+}
+
 #pragma endregion CollisionFunctionality
 
 bool operator==(const POINT& lhs, const POINT& rhs)
@@ -693,5 +698,20 @@ bool operator==(const POINT& lhs, const POINT& rhs)
 POINT operator+(const POINT& lhs, const POINT& rhs)
 {
 	return POINT{ lhs.x + rhs.x,lhs.y + rhs.y };
+}
+
+Point2f operator*(const POINT& lhs, float multiplier)
+{
+	return Point2f{ lhs.x * multiplier,lhs.y * multiplier };
+}
+
+Point2f operator*(float multiplier, const POINT& lhs)
+{
+	return lhs * multiplier;
+}
+
+Point2f operator+(const Point2f& lhs, const Point2f& rhs)
+{
+	return Point2f{ lhs.x + rhs.x,lhs.y + rhs.y };
 }
 

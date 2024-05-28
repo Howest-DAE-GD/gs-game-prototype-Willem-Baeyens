@@ -82,7 +82,14 @@ namespace utils
 	bool IntersectRectLine(const Rectf& r, const Point2f& p1, const Point2f& p2, float& intersectMin, float& intersectMax);
 
 #pragma endregion CollisionFunctionality
+
+	Point2f GetCenter(const Rectf& rect);
 }
 
 bool operator==(const POINT& lhs, const POINT& rhs);
 POINT operator+(const POINT& lhs, const POINT& rhs);
+Point2f operator*(const POINT& lhs, float multiplier);
+Point2f operator*(float multiplier,const POINT& lhs);
+
+Point2f operator+(const Point2f& lhs, const Point2f& rhs);
+

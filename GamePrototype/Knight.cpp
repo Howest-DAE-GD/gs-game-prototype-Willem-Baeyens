@@ -3,16 +3,16 @@
 #include "utils.h"
 
 Knight::Knight(POINT gridPos,Grid* GridPtr):
-	m_Grid_Position{gridPos},
+	m_GridPosition{gridPos},
 	m_Color{ 211,211,211,1},
-	m_NextMove{1},
+	m_NextMove{0,1},
 	m_Attacking{false},
 	m_AttackDuration{0.4f},
 	m_AttackTimer{0.f},
 	m_GridPtr{GridPtr},
 	m_Stunned{false},
 	m_MaxRowIndex{ GridPtr->GetRowCount() - 1},
-	m_MaxHealth{5},
+	m_MaxHealth{10},
 	m_CurrentHealth{m_MaxHealth}
 {
 
@@ -40,7 +40,7 @@ Color4f Knight::GetColor() const
 
 POINT Knight::GetGridPosition() const
 {
-	return m_Grid_Position;
+	return m_GridPosition;
 }
 
 void Knight::Draw(Rectf rect) const
@@ -53,24 +53,28 @@ void Knight::Draw(Rectf rect) const
 		Rectf attackRect{ rect.left+5.f,rect.bottom + rect.height / 3,rect.width * 3.5f,rect.height / 3 };
 		utils::FillRect(attackRect);
 	}
+	DrawNextMoveArrow();
 	DrawHealth(rect, m_MaxHealth, m_CurrentHealth);
 }
 
-void Knight::DoTurn()
+void Knight::Move()
 {
 	if (not IsAlive()) return;
 
-	m_Grid_Position.y += m_NextMove;
-	if (m_Grid_Position.y == 0)
+	m_GridPosition = m_GridPosition + m_NextMove;
+	if (m_GridPosition.y == 0)
 	{
-		m_NextMove = 1;
+		m_NextMove.y = 1;
 	}
-	if (m_Grid_Position.y == m_MaxRowIndex)
+	if (m_GridPosition.y == m_MaxRowIndex)
 	{
-		m_NextMove = -1;
+		m_NextMove.y = -1;
 	}
-	//m_Attacking = true;
-	//m_EnemyGridPtr->DoDamage({ 0,m_Grid_Position.y }, 1);
+}
+
+void Knight::Attack()
+{
+	if (not IsAlive()) return;
 }
 
 void Knight::TakeDamage(int damage)
@@ -86,4 +90,27 @@ bool Knight::IsAlive() const
 void Knight::Stun()
 {
 	m_Stunned = true;
+}
+
+void Knight::DrawNextMoveArrow() const
+{
+	utils::SetColor(Color4f{ 0,0,0,1.f });
+
+	Point2f currentCenter = utils::GetCenter(m_GridPtr->GetRectAtPosition(m_GridPosition));
+	int length{ m_GridPtr->GetSquareSize() };
+	Point2f corner3 = currentCenter + (m_NextMove * (length * .3f));
+	Point2f corner1 = currentCenter + m_NextMove * (length * .1f);
+	Point2f corner2 = corner1;
+
+	if (m_NextMove.x == 0)
+	{
+		corner1.x -= 12;
+		corner2.x += 12;
+	}
+	else
+	{
+		corner1.y -= 12;
+		corner2.y += 12;
+	}
+	utils::FillPolygon(std::vector<Point2f>{corner1, corner3, corner2});
 }

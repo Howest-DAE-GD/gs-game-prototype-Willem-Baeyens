@@ -13,7 +13,7 @@ Fireball::Fireball(POINT gridPos,Grid* grid):
 
 void Fireball::Draw() const
 {
-	utils::SetColor(Color4f{ 1.f,0.165f, 0.01f,1 });
+	utils::SetColor(Color4f{ 232/255.f, 91/255.f, 35/255.f,0.7f });
 	int squareSize = m_GridPtr->GetSquareSize();
 	Vector2f gridLocation = m_GridPtr->GetLocation();
 	Rectf targetRect = Rectf{ gridLocation.x + m_GridPosition.x * squareSize
@@ -21,7 +21,11 @@ void Fireball::Draw() const
 								,float(squareSize),float(squareSize) };
 	if (not m_Exploding)
 	{
-		utils::DrawRect(targetRect, 5.f);
+		targetRect.bottom += 5.f;
+		targetRect.left += 5.f;
+		targetRect.height -= 10.f;
+		targetRect.width -= 10.f;
+		utils::DrawRect(targetRect, 3.f);
 	}
 
 
@@ -33,7 +37,7 @@ void Fireball::Draw() const
 	}
 }
 
-void Fireball::Update(float elapsedSec)
+bool Fireball::Update(float elapsedSec)
 {
 	if (m_Exploding)
 	{
@@ -43,12 +47,18 @@ void Fireball::Update(float elapsedSec)
 			m_Exploding = false;
 			m_ExplostionTimer = 0.f;
 			m_GridPosition.x = -100;
+			return true;
 		}
 	}
+
+	return false;
 }
 
 void Fireball::Explode() 
 {
-	m_GridPtr->DoDamage(m_GridPosition, 2);
+	if (m_GridPtr->GetCreatureAtPosition(m_GridPosition) and m_GridPtr->GetCreatureAtPosition(m_GridPosition)->IsBoss())
+	{
+		m_GridPtr->DoDamage(m_GridPosition, 2);
+	}
 	m_Exploding = true;
 }

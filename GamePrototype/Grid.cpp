@@ -26,11 +26,14 @@ void Grid::Draw() const
 			utils::DrawRect(rect);
 		}
 	}
-
 	for (Creature* creaturePtr : m_CreaturePtrVect)
 	{
 		POINT gridPos = creaturePtr->GetGridPosition();
 		Rectf rect = GetRectAtPosition(gridPos);
+		if (creaturePtr->IsBoss())
+		{
+			continue;
+		}
 		creaturePtr->Draw(rect);
 	}
 }
@@ -84,6 +87,13 @@ Creature* Grid::GetCreatureAtPosition(POINT position) const
 		}
 	}
 	return nullptr;
+}
+
+bool Grid::IsInGrid(POINT position) const
+{
+	if (position.x < 0 or position.y < 0) return false;
+	if (position.x >= m_ColumnCount or position.y >= m_RowCount) return false;
+	return true;
 }
 
 

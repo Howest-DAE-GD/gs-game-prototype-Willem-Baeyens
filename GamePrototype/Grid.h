@@ -23,6 +23,8 @@ public:
 
 	Creature* GetCreatureAtPosition(POINT position) const;
 
+	bool IsInGrid(POINT position) const;
+
 	std::vector<POINT> GetCreaturePositions() const;
 private:
 	int m_ColumnCount;

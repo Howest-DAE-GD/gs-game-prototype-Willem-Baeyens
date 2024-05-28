@@ -18,19 +18,13 @@ void Game::Initialize( )
 {
 	m_StunningText = new Texture("Stunning next turn", "DIN-Light.otf", 30, Color4f{ 1,1,1,1 });
 
-	//m_BossGrid = Grid(5, 5, 60, Vector2f{ 480,120 });
-	//m_HeroGrid = Grid(5, 5, 60, Vector2f{ 80,120 });
 
 	m_Grid1Ptr = new Grid(9, 5, 60, Vector2f{ 145, 120 });
 
 	m_Mage = new Mage{ POINT{1,3},m_Grid1Ptr };
 	m_Knight = new Knight{ POINT{4,2},m_Grid1Ptr};
-	m_Boss = new Boss{ POINT{5,2},m_Knight,m_Grid1Ptr};
+	m_Boss = new Boss{ POINT{6,2},m_Knight,m_Grid1Ptr};
 
-	//m_BossGrid.AddCreature(m_Boss);
-	//
-	//m_HeroGrid.AddCreature(m_Mage);
-	//m_HeroGrid.AddCreature(m_Knight);
 
 	m_Grid1Ptr->AddCreature(m_Mage);
 	m_Grid1Ptr->AddCreature(m_Knight);
@@ -46,22 +40,35 @@ void Game::Update( float elapsedSec )
 {
 	m_Mage->Update(elapsedSec);
 	m_Knight->Update(elapsedSec);
-	m_BossDoneAttacking = m_Boss->Update(elapsedSec);
-	if (m_Between)
+	m_Boss->Update(elapsedSec);
+
+	if (m_TimerBetweenMove > 0.f)
 	{
-		m_Timer += elapsedSec;
+		m_TimerBetweenMove += elapsedSec;
+		if (m_TimerBetweenMove > 0.5f) {
+			HeroMove();
+		}
 	}
-	if (m_Timer > m_TimeBetweenHeroBoss)
+	if (m_TimerBetweenMoveAttack > 0.f)
 	{
-		NextTurnHero();
+		m_TimerBetweenMoveAttack += elapsedSec;
+		if (m_TimerBetweenMoveAttack > 0.5f) {
+			BossAttack();
+		}
+	}
+	if (m_TimerBetweenAttack > 0.f)
+	{
+		m_TimerBetweenAttack += elapsedSec;
+		if (m_TimerBetweenAttack > 0.2f) {
+			HeroAttack();
+		}
 	}
 }
 
 void Game::Draw( ) const
 {
 	ClearBackground( );
-	//m_BossGrid.Draw();
-	//m_HeroGrid.Draw();
+	m_Boss->Draw(m_Grid1Ptr->GetRectAtPosition(m_Boss->GetGridPosition()));
 	m_Grid1Ptr->Draw();
 }
 
@@ -72,32 +79,28 @@ void Game::ProcessKeyDownEvent( const SDL_KeyboardEvent & e )
 void Game::ProcessKeyUpEvent( const SDL_KeyboardEvent& e )
 {
 	if (m_Boss->GetHealth() <= 0) return;
-	if (not m_BossDoneAttacking) return;
-	if (m_Between) return;
+	if (m_TurnInProgress) return;
 	switch (e.keysym.sym)
 	{
 	case SDLK_RETURN:
-		NextTurnBoss();
+		BossMove();
 		break;
 	case SDLK_LEFT:
 		m_BossMove = { -1,0 };
-		NextTurnBoss();
+		BossMove();
 		break;
 	case SDLK_RIGHT:
 		m_BossMove = { 1,0 };
-		NextTurnBoss();
+		BossMove();
 		break;
 	case SDLK_UP:
 		m_BossMove = { 0,1 };
-		NextTurnBoss();
+		BossMove();
 		break;
 	case SDLK_DOWN:
 		m_BossMove = { 0,-1};
-		NextTurnBoss();
+		BossMove();
 		break;
-	//case SDLK_SPACE:
-	//	m_Stunning = !m_Stunning;
-	//	break;
 	}
 }
 
@@ -125,31 +128,41 @@ void Game::ClearBackground( ) const
 	glClear( GL_COLOR_BUFFER_BIT );
 }
 
-void Game::NextTurnHero()
-{
-	m_Knight->DoTurn();
-	m_Mage->DoTurn();
-	m_Between = false;
-	m_Timer = 0;
-
-	std::cout << m_TurnCounter << "\n";
-
-}
-void Game::NextTurnBoss()
+void Game::BossMove()
 {
 	if (not m_Boss->CheckMove(m_BossMove)) return;
 
 	++m_TurnCounter;
-
-	m_Mage->SetLastBossPosition(m_Boss->GetGridPosition());
+	m_TurnInProgress = true;
 
 	m_Boss->Move(m_BossMove);
-	//if (m_Stunning)
-	//{
-	//	m_Boss->Stun();
-	//	m_Stunning = false;
-	//}
 	m_BossMove = {};
 
-	m_Between = true;
+	m_TimerBetweenMove = { 0.0001f };
+}
+
+void Game::HeroMove()
+{
+	m_TimerBetweenMove = 0.f;
+	m_Knight->Move();
+	m_Mage->Move();
+	m_TimerBetweenMoveAttack = { 0.0001f };
+}
+
+void Game::BossAttack()
+{
+	m_TimerBetweenMoveAttack = 0.f;
+	m_Boss->Attack();
+	m_TimerBetweenAttack = { 0.0001f };
+}
+
+void Game::HeroAttack()
+{
+	m_Boss->HitEnemies();
+	m_TimerBetweenAttack = 0.f;
+	m_Knight->Attack();
+	m_Mage->Attack();
+	m_TimerBetweenAttack = { 0.f };
+	m_TurnInProgress = false;
+	std::cout << m_TurnCounter << "\n";
 }

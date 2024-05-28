@@ -5,7 +5,7 @@
 class Knight;
 enum class BossMove
 {
-	null,columnAttack,rowAttack,cometAttack,surroundingAttack
+	null,columnAttack,beamAttack,cometAttack,surroundingAttack
 };
 
 class Boss final : public Creature
@@ -35,10 +35,12 @@ public:
 	bool CheckMove(POINT change) const;
 
 	int GetHealth() const;
-
-private:
-
+	
+	virtual bool IsBoss() const override;
 	void Attack();
+private:
+	
+
 	void IncrementAttackIndex();
 
 	Rectf m_Rect;

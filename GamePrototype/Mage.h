@@ -11,7 +11,8 @@ public:
 
 	void Update(float elapsedSec);
 
-	void DoTurn();
+	void Move();
+	void Attack();
 	virtual void TakeDamage(int damage);
 
 	bool IsAlive() const;
@@ -21,13 +22,21 @@ public:
 	virtual Color4f GetColor() const override;
 	virtual POINT GetGridPosition() const override;
 private:
+
+	void CalculateNextMove();
+
+	void DrawNextMoveArrow() const;
 	Rectf m_Rect;
 	Color4f m_Color;
 	POINT m_GridPosition;
 	Grid* m_GridPtr;
-	//Fireball m_Fireball;
+	POINT m_NextMove;
+	POINT m_PreviousMove;
+	std::vector<Fireball> m_FireballVect;
 	bool m_Charging;
 	POINT m_LastBossPosition;
 	int m_MaxHealth;
 	int m_CurrentHealth;
+
+	int m_AttackStart{ 1 };
 };

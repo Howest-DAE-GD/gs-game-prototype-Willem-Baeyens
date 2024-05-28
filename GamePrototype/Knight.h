@@ -14,21 +14,23 @@ public:
 
 	virtual void Draw(Rectf rect) const override;
 
-	void DoTurn();
+	void Move();
+	void Attack();
 	virtual void TakeDamage(int damage);
 
 	bool IsAlive() const;
 
 	void Stun();
 private:
+	void DrawNextMoveArrow() const;
+
 	Color4f m_Color;
-	POINT	m_Grid_Position;
-	int		m_NextMove;
+	POINT	m_GridPosition;
+	POINT	m_NextMove;
 	const int m_MaxRowIndex;
 	bool m_Attacking;
 	float m_AttackDuration;
 	float m_AttackTimer;
-	//Grid* m_EnemyGridPtr;
 	Grid* m_GridPtr;
 	bool m_Stunned;
 	int  m_MaxHealth;

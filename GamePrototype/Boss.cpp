@@ -6,7 +6,7 @@
 Boss::Boss(POINT gridPos,Knight* knightPtr, Grid* gridPtr):
 	m_Speed{200},
 	m_GridPosition{gridPos},
-	m_Health{10},
+	m_Health{20},
 	m_HealthBarRect{250.f,475.f,350.f,20.f},
 	//m_StunCounter{0},
 	m_KnightPtr{knightPtr},
@@ -16,7 +16,7 @@ Boss::Boss(POINT gridPos,Knight* knightPtr, Grid* gridPtr):
 	m_Attacking{false},
 	m_DidDamage{false},
 	m_AttackLocations{},
-	m_AttackPatternVect{BossMove::surroundingAttack,BossMove::surroundingAttack,BossMove::null,BossMove::columnAttack},
+	m_AttackPatternVect{BossMove::null,BossMove::beamAttack,BossMove::null,BossMove::surroundingAttack},
 	m_AttackIndex{}
 {	
 	m_Rect = Rectf{ 600,200,100,100 };
@@ -46,10 +46,8 @@ void Boss::Draw(Rectf rect) const
 	currentHealthRect.width = m_HealthBarRect.width * m_Health / 10.f;
 	utils::FillRect(currentHealthRect);
 
-	if (m_AttackTimer >= 0.7f)
-	{
-		DrawAttack();
-	}
+
+	DrawAttack();
 }
 
 void Boss::DrawAttack() const
@@ -74,23 +72,6 @@ void Boss::Move(const Vector2f& change)
 
 bool Boss::Update(const float elapsedSec)
 {
-	if (m_Attacking)
-	{
-		if (not m_DidDamage and m_AttackTimer >= 0.7f)
-		{
-			HitEnemies();
-			m_DidDamage = true;
-		}
-		m_AttackTimer += elapsedSec;
-		if (m_AttackTimer > m_AttackDuration)
-		{
-			m_AttackTimer = 0.f;
-			m_Attacking = false;
-			m_AttackLocations.clear();
-			return true;
-		}
-		return false;
-	}
 	return true;
 }
 
@@ -113,12 +94,17 @@ void Boss::Move(POINT change)
 {
 	m_GridPosition.x += change.x;
 	m_GridPosition.y += change.y;
-	Attack();
 }
 
 void Boss::RowAttack()
 {
-	for (int index = 0; index < m_GridPosition.x; ++index)
+	int index = 0;
+	POINT knightPos = m_KnightPtr->GetGridPosition();
+	if (knightPos.y == m_GridPosition.y and knightPos.x < m_GridPosition.x)
+	{
+		index = knightPos.x;
+	}
+	for (; index < m_GridPosition.x; ++index)
 	{
 		POINT location{ index,m_GridPosition.y };
 		m_AttackLocations.push_back(location);
@@ -169,38 +155,33 @@ void Boss::HitEnemies()
 	{
 		m_GridPtr->DoDamage(m_AttackLocations[index], 2);
 	}
+	m_AttackLocations.clear();
 }
 
 bool Boss::CheckMove(POINT change) const
 {
 	int newX{ m_GridPosition.x + change.x };
 	int newY{ m_GridPosition.y + change.y };
+
 	if (newY >= m_GridPtr->GetRowCount()) return false;
 	if (newY < 0) return false;
 	if (newX >= m_GridPtr->GetColumnCount()) return false;
 	if (newX < 0) return false;
 
+	if (m_GridPtr->GetCreatureAtPosition(POINT{ newX,newY }) == this) return true;
 	if (m_GridPtr->GetCreatureAtPosition(POINT{newX,newY})) return false;
 
 	return true;
 }
 
-//void Boss::Stun()
-//{
-//	if (m_StunCounter != 2) return;
-//	m_KnightPtr->Stun();
-//	m_Color = Color4f{ 219 / 255.f, 99 / 255.f, 107 / 255.f,1.f };
-//	m_StunCounter = 0;
-//}
-//
-//int Boss::GetStunCounter() const
-//{
-//	return m_StunCounter;
-//}
-
 int Boss::GetHealth() const
 {
 	return m_Health;
+}
+
+bool Boss::IsBoss() const
+{
+	return true;
 }
 
 void Boss::Attack()
@@ -213,7 +194,7 @@ void Boss::Attack()
 		ColumAttack();
 		m_Attacking = true;
 		break;
-	case BossMove::rowAttack:
+	case BossMove::beamAttack:
 		RowAttack();
 		m_Attacking = true;
 		break;

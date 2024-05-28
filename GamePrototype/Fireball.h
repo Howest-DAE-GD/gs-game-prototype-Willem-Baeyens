@@ -7,7 +7,7 @@ public:
 	Fireball() = default;
 
 	void Draw() const;
-	void Update(float elapsedSec);
+	bool Update(float elapsedSec);
 
 	void Explode();
 private:

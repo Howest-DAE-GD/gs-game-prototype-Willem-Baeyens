@@ -8,6 +8,7 @@ public:
 	virtual POINT GetGridPosition() const = 0;
 	virtual void Draw(Rectf rect) const;
 	virtual void TakeDamage(int damage);
+	virtual bool IsBoss() const;
 	void DrawHealth(const Rectf& rect,int maxHealth, int currentHealth) const;
 private:
 };

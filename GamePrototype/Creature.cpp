@@ -16,10 +16,15 @@ void Creature::TakeDamage(int damage)
 {
 }
 
+bool Creature::IsBoss() const
+{
+	return false;
+}
+
 void Creature::DrawHealth(const Rectf& rect, int maxHealth, int currentHealth) const
 {
 	Rectf currentHealthRect = rect;
-	currentHealthRect.bottom += rect.height * 1.1f;
+	currentHealthRect.bottom += rect.height * 1.05f;
 	currentHealthRect.height = rect.height / 5;
 	currentHealthRect.left += rect.width * 0.05f;
 	currentHealthRect.width = (currentHealthRect.width * 0.9f);
