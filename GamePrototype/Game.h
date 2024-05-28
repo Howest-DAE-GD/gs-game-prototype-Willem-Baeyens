@@ -1,9 +1,10 @@
 #pragma once
 #include "BaseGame.h"
 #include "Mage.h"
+#include "Knight.h"
+#include "Rogue.h"
 #include "Boss.h"
 #include "Grid.h"
-#include "Knight.h"
 #include "Texture.h"
 class Game : public BaseGame
 {
@@ -40,8 +41,9 @@ private:
 	void HeroAttack();
 
 	Mage* m_Mage;
-	Boss* m_Boss;
 	Knight* m_Knight;
+	Rogue* m_Rogue;
+	Boss* m_Boss;
 	Grid* m_Grid1Ptr;
 
 	POINT m_BossMove{};

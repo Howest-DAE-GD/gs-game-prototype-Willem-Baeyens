@@ -63,10 +63,6 @@ void Mage::Attack()
 		for (int index{ m_AttackStart }; index < m_GridPtr->GetColumnCount() * m_GridPtr->GetRowCount(); index += 2)
 		{
 			POINT location{ index % columnCount,index / columnCount };
-			//if (m_GridPtr->GetCreatureAtPosition(location) and not m_GridPtr->GetCreatureAtPosition(location)->IsBoss())
-			//{
-			//	continue;
-			//}
 			m_FireballVect.push_back(Fireball(location, m_GridPtr));
 		}
 		++m_AttackStart %= 2;

@@ -2,11 +2,13 @@
 #include "Boss.h"
 #include "utils.h"
 #include "Knight.h"
+#include <iostream>
 
 Boss::Boss(POINT gridPos,Knight* knightPtr, Grid* gridPtr):
 	m_Speed{200},
 	m_GridPosition{gridPos},
-	m_Health{20},
+	m_MaxHealth{20},
+	m_CurrentHealth{m_MaxHealth},
 	m_HealthBarRect{250.f,475.f,350.f,20.f},
 	//m_StunCounter{0},
 	m_KnightPtr{knightPtr},
@@ -43,7 +45,7 @@ void Boss::Draw(Rectf rect) const
 
 	utils::SetColor(Color4f{ 0,1,0,1 });
 	Rectf currentHealthRect = m_HealthBarRect;
-	currentHealthRect.width = m_HealthBarRect.width * m_Health / 10.f;
+	currentHealthRect.width = m_HealthBarRect.width * m_CurrentHealth / static_cast<float>(m_MaxHealth);
 	utils::FillRect(currentHealthRect);
 
 
@@ -87,7 +89,8 @@ POINT Boss::GetGridPosition() const
 
 void Boss::TakeDamage(int damage)
 {
-	m_Health -= damage;
+	m_CurrentHealth -= damage;
+	std::cout << "Took " << damage << " damage \n";
 }
 
 void Boss::Move(POINT change)
@@ -176,7 +179,7 @@ bool Boss::CheckMove(POINT change) const
 
 int Boss::GetHealth() const
 {
-	return m_Health;
+	return m_CurrentHealth;
 }
 
 bool Boss::IsBoss() const

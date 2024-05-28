@@ -24,10 +24,11 @@ void Game::Initialize( )
 	m_Mage = new Mage{ POINT{1,3},m_Grid1Ptr };
 	m_Knight = new Knight{ POINT{4,2},m_Grid1Ptr};
 	m_Boss = new Boss{ POINT{6,2},m_Knight,m_Grid1Ptr};
-
+	m_Rogue = new Rogue{ POINT{2,1},m_Grid1Ptr,m_Boss };
 
 	m_Grid1Ptr->AddCreature(m_Mage);
 	m_Grid1Ptr->AddCreature(m_Knight);
+	m_Grid1Ptr->AddCreature(m_Rogue);
 	m_Grid1Ptr->AddCreature(m_Boss);
 
 }
@@ -40,6 +41,7 @@ void Game::Update( float elapsedSec )
 {
 	m_Mage->Update(elapsedSec);
 	m_Knight->Update(elapsedSec);
+	m_Rogue->Update(elapsedSec);
 	m_Boss->Update(elapsedSec);
 
 	if (m_TimerBetweenMove > 0.f)
@@ -146,6 +148,7 @@ void Game::HeroMove()
 	m_TimerBetweenMove = 0.f;
 	m_Knight->Move();
 	m_Mage->Move();
+	m_Rogue->Move();
 	m_TimerBetweenMoveAttack = { 0.0001f };
 }
 
@@ -162,7 +165,8 @@ void Game::HeroAttack()
 	m_TimerBetweenAttack = 0.f;
 	m_Knight->Attack();
 	m_Mage->Attack();
+	m_Rogue->Attack();
 	m_TimerBetweenAttack = { 0.f };
 	m_TurnInProgress = false;
-	std::cout << m_TurnCounter << "\n";
+	std::cout << "Turn " << m_TurnCounter << "\n";
 }

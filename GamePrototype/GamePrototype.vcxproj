@@ -156,6 +156,7 @@ xcopy "$(SolutionDir)Resources\*.*" "$(TargetDir)" /y /d /s</Command>
     <ClCompile Include="Mage.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="pch.cpp" />
+    <ClCompile Include="Rogue.cpp" />
     <ClCompile Include="TurnManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -167,6 +168,7 @@ xcopy "$(SolutionDir)Resources\*.*" "$(TargetDir)" /y /d /s</Command>
     <ClInclude Include="Knight.h" />
     <ClInclude Include="Mage.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Rogue.h" />
     <ClInclude Include="TurnManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

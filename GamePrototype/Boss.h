@@ -32,7 +32,7 @@ public:
 
 	void HitEnemies();
 
-	bool CheckMove(POINT change) const;
+	bool CheckMove(POINT change) const ;
 
 	int GetHealth() const;
 	
@@ -48,7 +48,8 @@ private:
 	float m_Speed;
 	Color4f m_Color;
 	POINT	m_GridPosition;
-	int     m_Health;
+	int     m_MaxHealth;
+	int		m_CurrentHealth;
 	Knight* m_KnightPtr;
 	Grid* m_GridPtr;
 
