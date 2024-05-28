@@ -29,6 +29,8 @@ void Game::Initialize( )
 	m_Grid1Ptr->AddCreature(m_Rogue);
 	m_Grid1Ptr->AddCreature(m_Archer);
 	m_Grid1Ptr->AddCreature(m_Boss);
+
+	m_BossPatternPtr = new BossPatternDisplay{ Point2f{ 760,60 },m_Boss->GetPattern() };
 }
 
 void Game::Cleanup( )
@@ -37,7 +39,7 @@ void Game::Cleanup( )
 
 void Game::Update( float elapsedSec )
 {
-
+	if (m_CurrentInfoDisplay) return;
 
 	if (m_TimerBetweenMove > 0.f)
 	{
@@ -66,6 +68,12 @@ void Game::Update( float elapsedSec )
 	m_Rogue->Update(elapsedSec);
 	m_Archer->Update(elapsedSec);
 	m_Boss->Update(elapsedSec);
+
+	if (not m_TurnInProgress and not m_AllFinished)
+	{
+		CheckIfAllFinished();
+		if (m_AllFinished) m_BossPatternPtr->Turn();
+	}
 }
 
 void Game::Draw( ) const
@@ -73,6 +81,12 @@ void Game::Draw( ) const
 	ClearBackground( );
 	m_Boss->Draw(m_Grid1Ptr->GetRectAtPosition(m_Boss->GetGridPosition()));
 	m_Grid1Ptr->Draw();
+	if (m_CurrentInfoDisplay)
+	{
+		m_CurrentInfoDisplay->DrawInfo();
+	}
+	
+	m_BossPatternPtr->Draw();
 }
 
 void Game::ProcessKeyDownEvent( const SDL_KeyboardEvent & e )
@@ -81,11 +95,10 @@ void Game::ProcessKeyDownEvent( const SDL_KeyboardEvent & e )
 
 void Game::ProcessKeyUpEvent( const SDL_KeyboardEvent& e )
 {
+	if (m_CurrentInfoDisplay) return;
+
 	if (m_Boss->GetHealth() <= 0) return;
-	if (not m_TurnInProgress and not m_AllFinished)
-	{
-		CheckIfAllFinished();
-	}
+
 	if (not m_AllFinished) return;
 	switch (e.keysym.sym)
 	{
@@ -127,6 +140,7 @@ void Game::ProcessMouseDownEvent( const SDL_MouseButtonEvent& e )
 
 void Game::ProcessMouseUpEvent( const SDL_MouseButtonEvent& e )
 {
+	m_CurrentInfoDisplay = m_Grid1Ptr->Click(e);
 }
 
 void Game::ClearBackground( ) const
@@ -152,8 +166,8 @@ void Game::BossMove()
 void Game::HeroMove()
 {
 	m_TimerBetweenMove = 0.f;
-	m_Knight->Move();
 	m_Mage->Move();
+	m_Knight->Move();
 	m_Rogue->Move();
 	m_TimerBetweenMoveAttack = { 0.0001f };
 }

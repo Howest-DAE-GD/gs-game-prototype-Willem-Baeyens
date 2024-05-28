@@ -21,6 +21,8 @@ public:
 
 	virtual Color4f GetColor() const override;
 	virtual POINT GetGridPosition() const override;
+	virtual Texture* GetTexturePtr() const override;
+
 
 	virtual bool TurnDone() const override;
 private:
@@ -41,4 +43,6 @@ private:
 	int m_CurrentHealth;
 
 	int m_AttackStart{ 1 };
+
+	Texture* m_InfoTexturePtr;
 };

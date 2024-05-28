@@ -11,6 +11,7 @@ public:
 
 	virtual Color4f GetColor() const override;
 	virtual POINT GetGridPosition() const override;
+	virtual Texture* GetTexturePtr() const override;
 
 	virtual void Draw(Rectf rect) const override;
 
@@ -31,4 +32,6 @@ private:
 	Grid* m_GridPtr;
 	int  m_MaxHealth;
 	int  m_CurrentHealth;
+
+	Texture* m_InfoTexturePtr;
 };

@@ -10,6 +10,8 @@ public:
 
 	virtual Color4f GetColor() const override;
 	virtual POINT GetGridPosition() const override;
+	virtual Texture* GetTexturePtr() const override;
+
 
 	virtual void Draw(Rectf rect) const override;
 
@@ -27,6 +29,8 @@ private:
 
 	void ChangeColorIfAllyInRange();
 
+	void Rotate(bool clockwise = false);
+
 	POINT	m_GridPosition;
 	Grid*	m_GridPtr;
 	Boss*	m_Boss;
@@ -37,6 +41,10 @@ private:
 
 	bool    m_ExtraStep;
 	float   m_ExtraStepTimer;
+
+	bool    m_Rotating;
+
+	Texture* m_InfoTexturePtr;
 };
 
 POINT Difference(POINT lhs, POINT rhs);

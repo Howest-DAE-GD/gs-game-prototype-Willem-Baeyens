@@ -17,6 +17,7 @@ Mage::Mage(POINT gridPos, Grid* gridPtr) :
 {
 	m_Rect = Rectf{ 200,200,50,50 };
 	CalculateNextMove();
+	m_InfoTexturePtr = new Texture("MageInfo.png");
 }
 
 void Mage::Draw(Rectf rect) const
@@ -103,6 +104,11 @@ POINT Mage::GetGridPosition() const
 	return m_GridPosition;
 }
 
+Texture* Mage::GetTexturePtr() const
+{
+	return m_InfoTexturePtr;
+}
+
 bool Mage::TurnDone() const
 {
 	return true;
@@ -134,8 +140,11 @@ void Mage::CalculateNextMove()
 		}
 		possibleMove = m_GridPtr->IsInGrid(m_GridPosition + move) and not (move == m_PreviousMove);
 	}
-
-	m_NextMove = move;
+	if (m_GridPtr->checkMoveHero(this, m_GridPosition + move))
+	{
+		m_NextMove = move;
+	}
+	else CalculateNextMove();
 }
 
 void Mage::DrawNextMoveArrow() const

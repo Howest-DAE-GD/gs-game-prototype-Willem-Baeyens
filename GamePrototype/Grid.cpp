@@ -118,3 +118,22 @@ bool Grid::checkMoveHero(Creature* moving, POINT newPos)
 
 	return true;
 }
+
+Creature* Grid::Click(const SDL_MouseButtonEvent& e)
+{
+	std::vector<Rectf> creatureGrids;
+	std::vector<POINT> positions{ GetCreaturePositions()};
+	for (int index{};index<positions.size();++index)
+	{
+		creatureGrids.push_back(GetRectAtPosition(positions[index]));
+	}
+	Point2f mousePos{ float(e.x),float(e.y) };
+	for (int index{}; index < positions.size(); ++index)
+	{
+		if (utils::IsPointInRect(mousePos, creatureGrids[index]))
+		{
+			return GetCreatureAtPosition(positions[index]);
+		}
+	}
+	return nullptr;
+}

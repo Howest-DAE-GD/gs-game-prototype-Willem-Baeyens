@@ -11,7 +11,7 @@ Knight::Knight(POINT gridPos,Grid* GridPtr):
 	m_MaxHealth{10},
 	m_CurrentHealth{m_MaxHealth}
 {
-
+	m_InfoTexturePtr = new Texture("KnightInfo.png");
 }
 
 void Knight::Update(float elapsedSec)
@@ -31,6 +31,11 @@ POINT Knight::GetGridPosition() const
 	return m_GridPosition;
 }
 
+Texture* Knight::GetTexturePtr() const
+{
+	return m_InfoTexturePtr;
+}
+
 void Knight::Draw(Rectf rect) const
 {
 	if (not IsAlive()) return;
@@ -44,6 +49,7 @@ void Knight::Move()
 {
 	if (not IsAlive()) return;
 
+	if (not m_GridPtr->checkMoveHero(this, m_GridPosition + m_NextMove)) return;
 	m_GridPosition = m_GridPosition + m_NextMove;
 	if (m_GridPosition.y == 0)
 	{

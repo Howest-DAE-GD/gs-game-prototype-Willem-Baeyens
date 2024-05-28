@@ -10,6 +10,8 @@ public:
 
 	virtual Color4f GetColor() const override;
 	virtual POINT GetGridPosition() const override;
+	virtual Texture* GetTexturePtr() const override;
+
 
 	virtual void Draw(Rectf rect) const override;
 
@@ -32,5 +34,6 @@ private:
 
 	bool	m_Stepping;
 	float   m_StepTimer;
+	Texture* m_InfoTexturePtr;
 };
 

@@ -12,6 +12,7 @@ Archer::Archer(POINT gridPos, Grid* gridPtr, Boss* bossPtr):
 	m_Stepping{false},
 	m_StepTimer{0.f}
 {
+	m_InfoTexturePtr = new Texture("ArcherInfo.png");
 }
 
 void Archer::Update(float elapsedSec)
@@ -37,6 +38,11 @@ Color4f Archer::GetColor() const
 POINT Archer::GetGridPosition() const
 {
 	return m_GridPosition;
+}
+
+Texture* Archer::GetTexturePtr() const
+{
+	return m_InfoTexturePtr;
 }
 
 void Archer::Draw(Rectf rect) const
@@ -83,7 +89,6 @@ bool Archer::TurnDone() const
 
 bool Archer::Step()
 {
-	std::cout << "step \n";
 	POINT bossPos = m_Boss->GetGridPosition();
 	POINT nextPos{ m_GridPosition };
 	if (bossPos.y > m_GridPosition.y) nextPos.y += 1;

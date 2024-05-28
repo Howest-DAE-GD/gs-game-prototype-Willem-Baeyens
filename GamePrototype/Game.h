@@ -7,6 +7,7 @@
 #include "Boss.h"
 #include "Grid.h"
 #include "Texture.h"
+#include "BossPatternDisplay.h"
 class Game : public BaseGame
 {
 public:
@@ -49,11 +50,12 @@ private:
 	Boss* m_Boss;
 	Grid* m_Grid1Ptr;
 
+	Creature* m_CurrentInfoDisplay{ nullptr };
+
 	POINT m_BossMove{};
 	int m_TurnCounter{ 0 };
 
-
-	Texture* m_StunningText;
+	BossPatternDisplay* m_BossPatternPtr;
 
 	float m_TimerBetweenMove{ 0.f };
 	float m_TimerBetweenMoveAttack{ 0.f };

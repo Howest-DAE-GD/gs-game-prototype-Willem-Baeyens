@@ -13,6 +13,7 @@ Rogue::Rogue(POINT gridPos, Grid* gridPtr, Boss* bossPtr):
 	m_ExtraStepTimer{0.f},
 	m_NextStep{}
 {
+	m_InfoTexturePtr = new Texture("RogueInfo.png");
 }
 
 void Rogue::Update(float elapsedSec)
@@ -28,6 +29,17 @@ void Rogue::Update(float elapsedSec)
 			m_ExtraStepTimer = 0.f;
 		}
 	}
+
+	if (m_Rotating)
+	{
+		m_ExtraStepTimer += elapsedSec;
+		if (m_ExtraStepTimer >= 0.2f)
+		{
+			m_GridPosition = m_GridPosition + m_NextStep;
+			m_Rotating = false;
+			m_ExtraStepTimer = 0.f;
+		}
+	}
 }
 
 Color4f Rogue::GetColor() const
@@ -40,6 +52,11 @@ POINT Rogue::GetGridPosition() const
 	return m_GridPosition;
 }
 
+Texture* Rogue::GetTexturePtr() const
+{
+	return m_InfoTexturePtr;
+}
+
 void Rogue::Draw(Rectf rect) const
 {
 	if (not IsAlive()) return;
@@ -50,10 +67,14 @@ void Rogue::Draw(Rectf rect) const
 void Rogue::Move()
 {
 	if (not IsAlive()) return;
-
+	m_NextStep = {};
 	m_ExtraStep = false;
 	int distance{ OrthogonalDistance(m_GridPosition,m_Boss->GetGridPosition()) };
-	if (distance <= 1) return;
+	if (distance == 1)
+	{
+		Rotate();
+		return;
+	}
 	Step();
 
 	distance = OrthogonalDistance(m_GridPosition, m_Boss->GetGridPosition());
@@ -137,6 +158,91 @@ void Rogue::ChangeColorIfAllyInRange()
 {
 	if (AllyInBossRange() and OrthogonalDistance(m_Boss->GetGridPosition(), m_GridPosition) == 1) m_Color = Color4f{ 31 / 255.f, 69 / 255.f, 130 / 255.f ,1.f };
 	else m_Color = Color4f{ 2 / 255.f, 6 / 255.f, 23 / 255.f,1.f };
+}
+
+void Rogue::Rotate(bool clockwise)
+{
+	POINT diffBoss{ Difference(m_Boss->GetGridPosition(),m_GridPosition) };
+
+	POINT firstMove{};
+	POINT secondMove{};
+	if (diffBoss.y == -1)//up
+	{
+		if (clockwise)
+		{
+			firstMove = { 1,0 };
+			secondMove = { 0,-1 };
+		}
+		else
+		{
+			firstMove = { -1,0 };
+			secondMove = { 0,-1 };
+		}
+	}
+	if (diffBoss.y == 1)//down
+	{
+		if (clockwise)
+		{
+			firstMove = { -1,0 };
+			secondMove = { 0,1 };
+		}
+		else
+		{
+			firstMove = { 1,0 };
+			secondMove = { 0,1 };
+		}
+	}
+	if (diffBoss.x == -1)//right
+	{
+		if (clockwise)
+		{
+			firstMove = { 0,-1 };
+			secondMove = { -1,0 };
+		}
+		else
+		{
+			firstMove = { 0,1 };
+			secondMove = { -1,0 };
+		}
+	}
+	if (diffBoss.x == 1)//left
+	{
+		if (clockwise)
+		{
+			firstMove = { 0,1 };
+			secondMove = { 1,0 };
+		}
+		else
+		{
+			firstMove = { 0,1 };
+			secondMove = { 1,0 };
+		}
+	}
+
+	if (not clockwise)
+	{
+		if (m_GridPtr->checkMoveHero(this, m_GridPosition + firstMove) and m_GridPtr->checkMoveHero(this, m_GridPosition + firstMove + secondMove))
+		{
+			m_GridPosition = m_GridPosition + firstMove;
+			m_NextStep = secondMove;
+			m_Rotating = true;
+		}
+		else
+		{
+			Rotate(true);
+		}
+	}
+	if (clockwise)
+	{
+		if (m_GridPtr->checkMoveHero(this, m_GridPosition + firstMove) and m_GridPtr->checkMoveHero(this, m_GridPosition + firstMove + secondMove))
+		{
+			m_GridPosition = m_GridPosition + firstMove;
+			m_NextStep = secondMove;
+			m_Rotating = true;
+		}
+		else return;
+	}
+
 }
 
 POINT Difference(POINT lhs, POINT rhs)

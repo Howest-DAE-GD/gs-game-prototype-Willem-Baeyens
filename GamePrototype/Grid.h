@@ -28,6 +28,8 @@ public:
 	std::vector<POINT> GetCreaturePositions() const;
 
 	bool checkMoveHero(Creature* moving, POINT newPos);
+
+	Creature* Click(const SDL_MouseButtonEvent& e);
 private:
 	int m_ColumnCount;
 	int m_RowCount;

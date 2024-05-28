@@ -22,6 +22,7 @@ Boss::Boss(POINT gridPos,Knight* knightPtr, Grid* gridPtr):
 {	
 	m_Rect = Rectf{ 600,200,100,100 };
 	m_Color = Color4f{ 135 / 255.f, 12 / 255.f, 20 / 255.f,1.f };
+	m_InfoTexturePtr = new Texture("BossInfo.png");
 }
 
 void Boss::Draw(Rectf rect) const
@@ -84,6 +85,11 @@ Color4f Boss::GetColor() const
 POINT Boss::GetGridPosition() const
 {
 	return m_GridPosition;
+}
+
+Texture* Boss::GetTexturePtr() const
+{
+	return m_InfoTexturePtr;
 }
 
 void Boss::TakeDamage(int damage)
@@ -215,6 +221,11 @@ void Boss::Attack()
 bool Boss::TurnDone() const
 {
 	return true;
+}
+
+std::vector<BossMove> Boss::GetPattern() const
+{
+	return m_AttackPatternVect;
 }
 
 void Boss::IncrementAttackIndex()

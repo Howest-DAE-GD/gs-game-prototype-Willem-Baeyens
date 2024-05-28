@@ -22,6 +22,8 @@ public:
 
 	virtual Color4f GetColor() const override;
 	virtual POINT GetGridPosition() const override;
+	virtual Texture* GetTexturePtr() const override;
+
 	virtual void TakeDamage(int damage) override;
 	void Move(POINT change);
 
@@ -40,6 +42,8 @@ public:
 	void Attack();
 
 	virtual bool TurnDone() const override;
+	
+	std::vector<BossMove> GetPattern() const;
 private:
 	
 
@@ -64,6 +68,8 @@ private:
 	std::vector<BossMove> m_AttackPatternVect;
 
 	int                   m_AttackIndex;
+
+	Texture* m_InfoTexturePtr;
 };
 
 
