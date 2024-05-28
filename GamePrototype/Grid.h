@@ -21,6 +21,8 @@ public:
 
 	Rectf GetRectAtPosition(POINT position) const;
 
+	Creature* GetCreatureAtPosition(POINT position) const;
+
 	std::vector<POINT> GetCreaturePositions() const;
 private:
 	int m_ColumnCount;

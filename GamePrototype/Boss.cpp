@@ -3,7 +3,7 @@
 #include "utils.h"
 #include "Knight.h"
 
-Boss::Boss(POINT gridPos,Knight* knightPtr, Grid* gridPtr,Grid* enemyGridPtr):
+Boss::Boss(POINT gridPos,Knight* knightPtr, Grid* gridPtr):
 	m_Speed{200},
 	m_GridPosition{gridPos},
 	m_Health{10},
@@ -11,13 +11,12 @@ Boss::Boss(POINT gridPos,Knight* knightPtr, Grid* gridPtr,Grid* enemyGridPtr):
 	//m_StunCounter{0},
 	m_KnightPtr{knightPtr},
 	m_GridPtr{gridPtr},
-	m_EnemyGridPtr{enemyGridPtr},
 	m_AttackDuration{1.f},
 	m_AttackTimer{0.f},
 	m_Attacking{false},
 	m_DidDamage{false},
 	m_AttackLocations{},
-	m_AttackPatternVect{BossMove::null,BossMove::rowAttack,BossMove::null,BossMove::columnAttack},
+	m_AttackPatternVect{BossMove::surroundingAttack,BossMove::surroundingAttack,BossMove::null,BossMove::columnAttack},
 	m_AttackIndex{}
 {	
 	m_Rect = Rectf{ 600,200,100,100 };
@@ -59,7 +58,7 @@ void Boss::DrawAttack() const
 
 	for (int index = 0; index < m_AttackLocations.size(); ++index)
 	{
-		Rectf rect = m_EnemyGridPtr->GetRectAtPosition(m_AttackLocations[index]);
+		Rectf rect = m_GridPtr->GetRectAtPosition(m_AttackLocations[index]);
 		rect.left += rect.width * 0.2f;
 		rect.bottom += rect.height * 0.2f;
 		rect.width = rect.width * 0.6f;
@@ -114,21 +113,12 @@ void Boss::Move(POINT change)
 {
 	m_GridPosition.x += change.x;
 	m_GridPosition.y += change.y;
-
-	//if (m_StunCounter < 2)
-	//{
-	//	m_StunCounter++;
-	//	if (m_StunCounter == 2)
-	//	{
-	//		m_Color = Color4f{ 135 / 255.f, 12 / 255.f, 20 / 255.f,1.f };
-	//	}
-	//}
 	Attack();
 }
 
 void Boss::RowAttack()
 {
-	for (int index = 0; index < m_EnemyGridPtr->GetColumnCount(); ++index)
+	for (int index = 0; index < m_GridPosition.x; ++index)
 	{
 		POINT location{ index,m_GridPosition.y };
 		m_AttackLocations.push_back(location);
@@ -138,9 +128,9 @@ void Boss::RowAttack()
 
 void Boss::ColumAttack()
 {
-	for (int index = 0; index < m_EnemyGridPtr->GetRowCount(); ++index)
+	for (int index = 0; index < m_GridPtr->GetRowCount(); ++index)
 	{
-		POINT location{ m_EnemyGridPtr->GetColumnCount()-1-m_GridPosition.x,index };
+		POINT location{ m_GridPosition.x - 1,index };
 		m_AttackLocations.push_back(location);
 	}
 	m_DidDamage = false;
@@ -148,11 +138,25 @@ void Boss::ColumAttack()
 
 void Boss::CometAttack()
 {
-	for (int rowIndex{ 1 }; rowIndex < m_EnemyGridPtr->GetRowCount() - 1; ++rowIndex)
+	for (int rowIndex{ 1 }; rowIndex < 4; ++rowIndex)
 	{
-		for (int columnIndex{ 1 }; columnIndex < m_EnemyGridPtr->GetColumnCount() - 1; ++columnIndex)
+		for (int columnIndex{ 1 }; columnIndex < 4; ++columnIndex)
 		{
 			POINT location{ columnIndex,rowIndex };
+			m_AttackLocations.push_back(location);
+		}
+	}
+	m_DidDamage = false;
+}
+
+void Boss::SurroundingAttack()
+{
+	for (int rowIndex{ m_GridPosition.y - 1 }; rowIndex <= m_GridPosition.y + 1; ++rowIndex)
+	{
+		for (int columnIndex{ m_GridPosition.x - 1 }; columnIndex <= m_GridPosition.x + 1; ++columnIndex)
+		{
+			POINT location{ columnIndex,rowIndex };
+			if (location == m_GridPosition) continue;
 			m_AttackLocations.push_back(location);
 		}
 	}
@@ -163,16 +167,20 @@ void Boss::HitEnemies()
 {
 	for (int index = 0; index < m_AttackLocations.size(); ++index)
 	{
-		m_EnemyGridPtr->DoDamage(m_AttackLocations[index], 2);
+		m_GridPtr->DoDamage(m_AttackLocations[index], 2);
 	}
 }
 
 bool Boss::CheckMove(POINT change) const
 {
-	if (m_GridPosition.y + change.y >= m_GridPtr->GetRowCount()) return false;
-	if (m_GridPosition.y + change.y < 0) return false;
-	if (m_GridPosition.x + change.x >= m_GridPtr->GetColumnCount()) return false;
-	if (m_GridPosition.x + change.x < 0) return false;
+	int newX{ m_GridPosition.x + change.x };
+	int newY{ m_GridPosition.y + change.y };
+	if (newY >= m_GridPtr->GetRowCount()) return false;
+	if (newY < 0) return false;
+	if (newX >= m_GridPtr->GetColumnCount()) return false;
+	if (newX < 0) return false;
+
+	if (m_GridPtr->GetCreatureAtPosition(POINT{newX,newY})) return false;
 
 	return true;
 }
@@ -211,6 +219,10 @@ void Boss::Attack()
 		break;
 	case BossMove::cometAttack:
 		CometAttack();
+		m_Attacking = true;
+		break;
+	case BossMove::surroundingAttack:
+		SurroundingAttack();
 		m_Attacking = true;
 		break;
 	}

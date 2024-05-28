@@ -74,6 +74,18 @@ Rectf Grid::GetRectAtPosition(POINT position) const
 	return rect;
 }
 
+Creature* Grid::GetCreatureAtPosition(POINT position) const
+{
+	for (Creature* creaturePtr : m_CreaturePtrVect)
+	{
+		if (position == creaturePtr->GetGridPosition())
+		{
+			return creaturePtr;
+		}
+	}
+	return nullptr;
+}
+
 
 
 std::vector<POINT> Grid::GetCreaturePositions() const
@@ -81,7 +93,6 @@ std::vector<POINT> Grid::GetCreaturePositions() const
 	std::vector<POINT> positions{};
 	for (Creature* creaturePtr : m_CreaturePtrVect)
 	{
-		;
 		positions.push_back(creaturePtr->GetGridPosition());
 	}
 	return positions;

@@ -38,8 +38,9 @@ private:
 	Mage* m_Mage;
 	Boss* m_Boss;
 	Knight* m_Knight;
-	Grid m_BossGrid;
-	Grid m_HeroGrid;
+	//Grid m_BossGrid;
+	//Grid m_HeroGrid;
+	Grid* m_Grid1Ptr;
 
 	POINT m_BossMove{};
 

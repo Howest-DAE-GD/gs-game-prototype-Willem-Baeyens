@@ -5,7 +5,7 @@
 class Mage final : public Creature
 {
 public:
-	Mage(POINT gridPosition, Grid* enemyGrid);
+	Mage(POINT gridPosition, Grid* gridPtr);
 
 	virtual void Draw(Rectf rect) const override;
 
@@ -24,8 +24,8 @@ private:
 	Rectf m_Rect;
 	Color4f m_Color;
 	POINT m_GridPosition;
-	Grid* m_EnemyGridPtr;
-	Fireball m_Fireball;
+	Grid* m_GridPtr;
+	//Fireball m_Fireball;
 	bool m_Charging;
 	POINT m_LastBossPosition;
 	int m_MaxHealth;

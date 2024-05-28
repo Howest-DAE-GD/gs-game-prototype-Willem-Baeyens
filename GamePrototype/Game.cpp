@@ -18,17 +18,24 @@ void Game::Initialize( )
 {
 	m_StunningText = new Texture("Stunning next turn", "DIN-Light.otf", 30, Color4f{ 1,1,1,1 });
 
-	m_BossGrid = Grid(5, 5, 60, Vector2f{ 480,120 });
-	m_HeroGrid = Grid(5, 5, 60, Vector2f{ 80,120 });
+	//m_BossGrid = Grid(5, 5, 60, Vector2f{ 480,120 });
+	//m_HeroGrid = Grid(5, 5, 60, Vector2f{ 80,120 });
 
-	m_Mage = new Mage{ POINT{0,2},&m_BossGrid };
-	m_Knight = new Knight{ POINT{4,2},&m_HeroGrid,&m_BossGrid};
-	m_Boss = new Boss{ POINT{0,2},m_Knight,&m_BossGrid, &m_HeroGrid};
+	m_Grid1Ptr = new Grid(9, 5, 60, Vector2f{ 145, 120 });
 
-	m_BossGrid.AddCreature(m_Boss);
+	m_Mage = new Mage{ POINT{1,3},m_Grid1Ptr };
+	m_Knight = new Knight{ POINT{4,2},m_Grid1Ptr};
+	m_Boss = new Boss{ POINT{5,2},m_Knight,m_Grid1Ptr};
 
-	m_HeroGrid.AddCreature(m_Mage);
-	m_HeroGrid.AddCreature(m_Knight);
+	//m_BossGrid.AddCreature(m_Boss);
+	//
+	//m_HeroGrid.AddCreature(m_Mage);
+	//m_HeroGrid.AddCreature(m_Knight);
+
+	m_Grid1Ptr->AddCreature(m_Mage);
+	m_Grid1Ptr->AddCreature(m_Knight);
+	m_Grid1Ptr->AddCreature(m_Boss);
+
 }
 
 void Game::Cleanup( )
@@ -53,12 +60,9 @@ void Game::Update( float elapsedSec )
 void Game::Draw( ) const
 {
 	ClearBackground( );
-	m_BossGrid.Draw();
-	m_HeroGrid.Draw();
-	//if (m_Stunning and m_Boss->GetStunCounter() == 2)
-	//{
-	//	m_StunningText->Draw(Point2f{ 325.f,50.f });
-	//}
+	//m_BossGrid.Draw();
+	//m_HeroGrid.Draw();
+	m_Grid1Ptr->Draw();
 }
 
 void Game::ProcessKeyDownEvent( const SDL_KeyboardEvent & e )

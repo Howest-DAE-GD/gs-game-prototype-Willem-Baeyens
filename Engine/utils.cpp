@@ -684,3 +684,14 @@ bool utils::IntersectRectLine(const Rectf& r, const Point2f& p1, const Point2f& 
 }
 
 #pragma endregion CollisionFunctionality
+
+bool operator==(const POINT& lhs, const POINT& rhs)
+{
+	return (lhs.x == rhs.x and lhs.y == rhs.y);
+}
+
+POINT operator+(const POINT& lhs, const POINT& rhs)
+{
+	return POINT{ lhs.x + rhs.x,lhs.y + rhs.y };
+}
+

@@ -2,7 +2,7 @@
 #include "Knight.h"
 #include "utils.h"
 
-Knight::Knight(POINT gridPos,Grid* GridPtr,Grid* enemyGridPtr):
+Knight::Knight(POINT gridPos,Grid* GridPtr):
 	m_Grid_Position{gridPos},
 	m_Color{ 211,211,211,1},
 	m_NextMove{1},
@@ -10,7 +10,6 @@ Knight::Knight(POINT gridPos,Grid* GridPtr,Grid* enemyGridPtr):
 	m_AttackDuration{0.4f},
 	m_AttackTimer{0.f},
 	m_GridPtr{GridPtr},
-	m_EnemyGridPtr{enemyGridPtr},
 	m_Stunned{false},
 	m_MaxRowIndex{ GridPtr->GetRowCount() - 1},
 	m_MaxHealth{5},
@@ -61,21 +60,17 @@ void Knight::DoTurn()
 {
 	if (not IsAlive()) return;
 
-	if (not m_Stunned)
+	m_Grid_Position.y += m_NextMove;
+	if (m_Grid_Position.y == 0)
 	{
-		m_Grid_Position.y += m_NextMove;
-		if (m_Grid_Position.y == 0)
-		{
-			m_NextMove = 1;
-		}
-		if (m_Grid_Position.y == m_MaxRowIndex)
-		{
-			m_NextMove = -1;
-		}
+		m_NextMove = 1;
 	}
-	m_Attacking = true;
-	m_EnemyGridPtr->DoDamage({ 0,m_Grid_Position.y }, 1);
-	m_Stunned = false;
+	if (m_Grid_Position.y == m_MaxRowIndex)
+	{
+		m_NextMove = -1;
+	}
+	//m_Attacking = true;
+	//m_EnemyGridPtr->DoDamage({ 0,m_Grid_Position.y }, 1);
 }
 
 void Knight::TakeDamage(int damage)

@@ -5,7 +5,7 @@
 class Knight final : public Creature
 {
 public:
-	Knight(POINT gridPos,Grid* gridPtr,Grid* enemyGridPtr);
+	Knight(POINT gridPos,Grid* gridPtr);
 	
 	void Update(float elapsedSec);
 
@@ -28,7 +28,7 @@ private:
 	bool m_Attacking;
 	float m_AttackDuration;
 	float m_AttackTimer;
-	Grid* m_EnemyGridPtr;
+	//Grid* m_EnemyGridPtr;
 	Grid* m_GridPtr;
 	bool m_Stunned;
 	int  m_MaxHealth;

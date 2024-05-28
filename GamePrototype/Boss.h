@@ -5,13 +5,13 @@
 class Knight;
 enum class BossMove
 {
-	null,columnAttack,rowAttack,cometAttack
+	null,columnAttack,rowAttack,cometAttack,surroundingAttack
 };
 
 class Boss final : public Creature
 {
 public:
-	Boss(POINT gridPos, Knight* knightPtr, Grid* gridPtr, Grid* enemyGridPtr);
+	Boss(POINT gridPos, Knight* knightPtr, Grid* gridPtr);
 
 	virtual void Draw(Rectf rect) const override;
 	void DrawAttack() const;
@@ -28,14 +28,11 @@ public:
 	void RowAttack();
 	void ColumAttack();
 	void CometAttack();
+	void SurroundingAttack();
 
 	void HitEnemies();
 
-
 	bool CheckMove(POINT change) const;
-	//void Stun();
-
-	//int GetStunCounter() const;
 
 	int GetHealth() const;
 
@@ -50,10 +47,8 @@ private:
 	Color4f m_Color;
 	POINT	m_GridPosition;
 	int     m_Health;
-	//int		m_StunCounter;
 	Knight* m_KnightPtr;
 	Grid* m_GridPtr;
-	Grid* m_EnemyGridPtr;
 
 	float m_AttackDuration;
 	float m_AttackTimer;
@@ -65,4 +60,5 @@ private:
 
 	int                   m_AttackIndex;
 };
+
 
