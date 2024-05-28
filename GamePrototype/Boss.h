@@ -5,7 +5,7 @@
 class Knight;
 enum class BossMove
 {
-	null,columnAttack,rowAttack,cometAttack,surroundingAttack
+	null,columnAttack,beamAttack,cometAttack,surroundingAttack
 };
 
 class Boss final : public Creature

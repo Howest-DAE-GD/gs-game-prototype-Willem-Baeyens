@@ -16,7 +16,7 @@ Boss::Boss(POINT gridPos,Knight* knightPtr, Grid* gridPtr):
 	m_Attacking{false},
 	m_DidDamage{false},
 	m_AttackLocations{},
-	m_AttackPatternVect{BossMove::surroundingAttack,BossMove::surroundingAttack,BossMove::null,BossMove::columnAttack},
+	m_AttackPatternVect{BossMove::beamAttack,BossMove::beamAttack,BossMove::null,BossMove::columnAttack},
 	m_AttackIndex{}
 {	
 	m_Rect = Rectf{ 600,200,100,100 };
@@ -88,6 +88,7 @@ bool Boss::Update(const float elapsedSec)
 			m_Attacking = false;
 			m_AttackLocations.clear();
 			return true;
+			//test comment
 		}
 		return false;
 	}
@@ -213,7 +214,7 @@ void Boss::Attack()
 		ColumAttack();
 		m_Attacking = true;
 		break;
-	case BossMove::rowAttack:
+	case BossMove::beamAttack:
 		RowAttack();
 		m_Attacking = true;
 		break;
