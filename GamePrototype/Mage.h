@@ -21,6 +21,8 @@ public:
 
 	virtual Color4f GetColor() const override;
 	virtual POINT GetGridPosition() const override;
+
+	virtual bool TurnDone() const override;
 private:
 
 	void CalculateNextMove();

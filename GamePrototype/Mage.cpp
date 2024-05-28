@@ -103,6 +103,11 @@ POINT Mage::GetGridPosition() const
 	return m_GridPosition;
 }
 
+bool Mage::TurnDone() const
+{
+	return true;
+}
+
 void Mage::CalculateNextMove()
 {
 	bool possibleMove{ false };

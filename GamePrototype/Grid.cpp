@@ -107,3 +107,14 @@ std::vector<POINT> Grid::GetCreaturePositions() const
 	}
 	return positions;
 }
+
+bool Grid::checkMoveHero(Creature* moving, POINT newPos)
+{
+	for (Creature* creaturePtr : m_CreaturePtrVect)
+	{
+		if (creaturePtr == moving) continue;
+		if (newPos == creaturePtr->GetGridPosition()) return false;
+	}
+
+	return true;
+}

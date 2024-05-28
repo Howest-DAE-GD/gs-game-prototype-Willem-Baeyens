@@ -3,6 +3,7 @@
 #include "Mage.h"
 #include "Knight.h"
 #include "Rogue.h"
+#include "Archer.h"
 #include "Boss.h"
 #include "Grid.h"
 #include "Texture.h"
@@ -34,15 +35,17 @@ private:
 	void Cleanup();
 	void ClearBackground() const;
 
-
 	void BossMove();
 	void HeroMove();
 	void BossAttack();
 	void HeroAttack();
 
+	void CheckIfAllFinished();
+
 	Mage* m_Mage;
 	Knight* m_Knight;
 	Rogue* m_Rogue;
+	Archer* m_Archer;
 	Boss* m_Boss;
 	Grid* m_Grid1Ptr;
 
@@ -57,4 +60,5 @@ private:
 	float m_TimerBetweenAttack{ 0.f };
 
 	bool m_TurnInProgress{ false };
+	bool m_AllFinished{ true };
 };

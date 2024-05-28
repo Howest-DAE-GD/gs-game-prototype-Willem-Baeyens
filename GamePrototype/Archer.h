@@ -1,10 +1,10 @@
 #pragma once
 #include "Grid.h"
 #include "Boss.h"
-class Rogue final : public Creature
+class Archer final : public Creature
 {
 public:
-	Rogue(POINT gridPos, Grid* gridPtr, Boss* bossPtr);
+	Archer(POINT gridPos, Grid* gridPtr, Boss* bossPtr);
 
 	void Update(float elapsedSec);
 
@@ -20,12 +20,8 @@ public:
 
 	bool IsAlive() const;
 	virtual bool TurnDone() const override;
-
 private:
-	bool AllyInBossRange();
-	void Step();
-
-	void ChangeColorIfAllyInRange();
+	bool Step();
 
 	POINT	m_GridPosition;
 	Grid*	m_GridPtr;
@@ -33,11 +29,8 @@ private:
 	int		m_MaxHealth;
 	int		m_CurrentHealth;
 	Color4f m_Color;
-	POINT   m_NextStep;
 
-	bool    m_ExtraStep;
-	float   m_ExtraStepTimer;
+	bool	m_Stepping;
+	float   m_StepTimer;
 };
 
-POINT Difference(POINT lhs, POINT rhs);
-int	  OrthogonalDistance(POINT lhs, POINT rhs);

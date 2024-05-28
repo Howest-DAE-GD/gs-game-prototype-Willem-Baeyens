@@ -16,21 +16,19 @@ Game::~Game( )
 
 void Game::Initialize( )
 {
-	m_StunningText = new Texture("Stunning next turn", "DIN-Light.otf", 30, Color4f{ 1,1,1,1 });
+	m_Grid1Ptr	= new Grid(9, 5, 60, Vector2f{ 145, 120 });
 
-
-	m_Grid1Ptr = new Grid(9, 5, 60, Vector2f{ 145, 120 });
-
-	m_Mage = new Mage{ POINT{1,3},m_Grid1Ptr };
-	m_Knight = new Knight{ POINT{4,2},m_Grid1Ptr};
-	m_Boss = new Boss{ POINT{6,2},m_Knight,m_Grid1Ptr};
-	m_Rogue = new Rogue{ POINT{2,1},m_Grid1Ptr,m_Boss };
+	m_Mage		= new Mage{ POINT{1,3},m_Grid1Ptr };
+	m_Knight	= new Knight{ POINT{4,2},m_Grid1Ptr};
+	m_Boss		= new Boss{ POINT{6,2},m_Knight,m_Grid1Ptr};
+	m_Rogue		= new Rogue{ POINT{3,0},m_Grid1Ptr,m_Boss };
+	m_Archer	= new Archer{ POINT{0,4},m_Grid1Ptr,m_Boss };
 
 	m_Grid1Ptr->AddCreature(m_Mage);
 	m_Grid1Ptr->AddCreature(m_Knight);
 	m_Grid1Ptr->AddCreature(m_Rogue);
+	m_Grid1Ptr->AddCreature(m_Archer);
 	m_Grid1Ptr->AddCreature(m_Boss);
-
 }
 
 void Game::Cleanup( )
@@ -39,10 +37,7 @@ void Game::Cleanup( )
 
 void Game::Update( float elapsedSec )
 {
-	m_Mage->Update(elapsedSec);
-	m_Knight->Update(elapsedSec);
-	m_Rogue->Update(elapsedSec);
-	m_Boss->Update(elapsedSec);
+
 
 	if (m_TimerBetweenMove > 0.f)
 	{
@@ -65,6 +60,12 @@ void Game::Update( float elapsedSec )
 			HeroAttack();
 		}
 	}
+
+	m_Mage->Update(elapsedSec);
+	m_Knight->Update(elapsedSec);
+	m_Rogue->Update(elapsedSec);
+	m_Archer->Update(elapsedSec);
+	m_Boss->Update(elapsedSec);
 }
 
 void Game::Draw( ) const
@@ -81,7 +82,11 @@ void Game::ProcessKeyDownEvent( const SDL_KeyboardEvent & e )
 void Game::ProcessKeyUpEvent( const SDL_KeyboardEvent& e )
 {
 	if (m_Boss->GetHealth() <= 0) return;
-	if (m_TurnInProgress) return;
+	if (not m_TurnInProgress and not m_AllFinished)
+	{
+		CheckIfAllFinished();
+	}
+	if (not m_AllFinished) return;
 	switch (e.keysym.sym)
 	{
 	case SDLK_RETURN:
@@ -136,6 +141,7 @@ void Game::BossMove()
 
 	++m_TurnCounter;
 	m_TurnInProgress = true;
+	m_AllFinished = false;
 
 	m_Boss->Move(m_BossMove);
 	m_BossMove = {};
@@ -165,8 +171,21 @@ void Game::HeroAttack()
 	m_TimerBetweenAttack = 0.f;
 	m_Knight->Attack();
 	m_Mage->Attack();
+	m_Archer->Attack();
+	m_Archer->Move();
 	m_Rogue->Attack();
 	m_TimerBetweenAttack = { 0.f };
 	m_TurnInProgress = false;
 	std::cout << "Turn " << m_TurnCounter << "\n";
+}
+
+void Game::CheckIfAllFinished()
+{
+	bool allFinished = true;
+	if (not m_Knight->TurnDone()) allFinished = false;
+	if (not m_Rogue->TurnDone()) allFinished = false;
+	if (not m_Boss->TurnDone()) allFinished = false;
+	if (not m_Mage->TurnDone()) allFinished = false;
+	if (not m_Archer->TurnDone()) allFinished = false;
+	m_AllFinished = allFinished;
 }

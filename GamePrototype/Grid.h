@@ -26,6 +26,8 @@ public:
 	bool IsInGrid(POINT position) const;
 
 	std::vector<POINT> GetCreaturePositions() const;
+
+	bool checkMoveHero(Creature* moving, POINT newPos);
 private:
 	int m_ColumnCount;
 	int m_RowCount;

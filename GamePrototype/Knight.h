@@ -20,7 +20,7 @@ public:
 
 	bool IsAlive() const;
 
-	void Stun();
+	virtual bool TurnDone() const override;
 private:
 	void DrawNextMoveArrow() const;
 
@@ -28,11 +28,7 @@ private:
 	POINT	m_GridPosition;
 	POINT	m_NextMove;
 	const int m_MaxRowIndex;
-	bool m_Attacking;
-	float m_AttackDuration;
-	float m_AttackTimer;
 	Grid* m_GridPtr;
-	bool m_Stunned;
 	int  m_MaxHealth;
 	int  m_CurrentHealth;
 };

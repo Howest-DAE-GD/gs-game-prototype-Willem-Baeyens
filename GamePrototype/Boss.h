@@ -38,6 +38,8 @@ public:
 	
 	virtual bool IsBoss() const override;
 	void Attack();
+
+	virtual bool TurnDone() const override;
 private:
 	
 

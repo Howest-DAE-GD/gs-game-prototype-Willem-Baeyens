@@ -10,7 +10,6 @@ Boss::Boss(POINT gridPos,Knight* knightPtr, Grid* gridPtr):
 	m_MaxHealth{20},
 	m_CurrentHealth{m_MaxHealth},
 	m_HealthBarRect{250.f,475.f,350.f,20.f},
-	//m_StunCounter{0},
 	m_KnightPtr{knightPtr},
 	m_GridPtr{gridPtr},
 	m_AttackDuration{1.f},
@@ -211,6 +210,11 @@ void Boss::Attack()
 		break;
 	}
 	IncrementAttackIndex();
+}
+
+bool Boss::TurnDone() const
+{
+	return true;
 }
 
 void Boss::IncrementAttackIndex()

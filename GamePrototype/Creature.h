@@ -10,6 +10,7 @@ public:
 	virtual void TakeDamage(int damage);
 	virtual bool IsBoss() const;
 	void DrawHealth(const Rectf& rect,int maxHealth, int currentHealth) const;
+	virtual bool TurnDone() const = 0;
 private:
 };
 

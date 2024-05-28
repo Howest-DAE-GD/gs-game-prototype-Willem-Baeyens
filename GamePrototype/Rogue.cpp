@@ -17,6 +17,7 @@ Rogue::Rogue(POINT gridPos, Grid* gridPtr, Boss* bossPtr):
 
 void Rogue::Update(float elapsedSec)
 {
+	if (not IsAlive()) return;
 	if (m_ExtraStep)
 	{
 		m_ExtraStepTimer += elapsedSec;
@@ -82,6 +83,11 @@ void Rogue::TakeDamage(int damage)
 bool Rogue::IsAlive() const
 {
 	return m_CurrentHealth > 0;
+}
+
+bool Rogue::TurnDone() const
+{
+	return m_ExtraStepTimer == 0.f;
 }
 
 bool Rogue::AllyInBossRange()
