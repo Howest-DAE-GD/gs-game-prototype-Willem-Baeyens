@@ -34,7 +34,7 @@ public:
 
 	bool CheckMove(POINT change) const ;
 
-	int GetHealth() const;
+	virtual int GetHealth() const override;
 	
 	virtual bool IsBoss() const override;
 	void Attack();

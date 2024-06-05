@@ -70,3 +70,8 @@ void Creature::Move()
 void Creature::Attack()
 {
 }
+
+bool Creature::IsDamagingHero() const
+{
+	return false;
+}

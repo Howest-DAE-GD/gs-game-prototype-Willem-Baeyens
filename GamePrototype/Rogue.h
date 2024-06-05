@@ -26,6 +26,9 @@ public:
 	virtual int GetAttackPriority() const override;
 	virtual int GetMovePriority() const override;
 
+	virtual bool IsDamagingHero() const override;
+	virtual int GetHealth() const override;
+
 private:
 	bool AllyInBossRange();
 	void Step();

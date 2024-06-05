@@ -22,7 +22,8 @@ public:
 
 	void Update(float elapsedSec);
 
-	bool IsLevelDone() const;
+	bool IsLevelWon() const;
+	bool IsLevelLost() const;
 
 	void DoDamage(POINT gridPosition, int damage);
 	int GetSquareSize() const;
@@ -46,6 +47,8 @@ public:
 	void ProcessKeyUpEvent(const SDL_KeyboardEvent& e);
 
 	POINT GetBossPosition() const;
+
+	void RemoveDeadHeroes();
 private:
 	void BossMove();
 	void HeroMove();

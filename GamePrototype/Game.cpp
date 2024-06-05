@@ -2,6 +2,7 @@
 #include "Game.h"
 #include "utils.h"
 #include <iostream>
+#include <stdlib.h>
 
 Game::Game( const Window& window ) 
 	:BaseGame{ window }
@@ -39,7 +40,7 @@ void Game::Cleanup( )
 void Game::Update(float elapsedSec)
 {
 	m_Grid1Ptr->Update(elapsedSec);
-	if (m_Grid1Ptr->IsLevelDone())
+	if (m_Grid1Ptr->IsLevelWon())
 	{
 		++m_Level;
 		switch (m_Level)
@@ -49,8 +50,8 @@ void Game::Update(float elapsedSec)
 
 			m_Mage1 = new Mage{ POINT{1,3},m_Grid1Ptr,2 };
 			m_Knight1 = new Knight{ POINT{4,2},m_Grid1Ptr,10 };
-			m_Boss1 = new Boss{ POINT{6,2},m_Knight1,m_Grid1Ptr,4 };
-			m_Rogue1 = new Rogue{ POINT{3,0},m_Grid1Ptr,m_Boss1,7 };
+			m_Boss1 = new Boss{ POINT{6,2},m_Knight1,m_Grid1Ptr,20 };
+			m_Rogue1 = new Rogue{ POINT{3,0},m_Grid1Ptr,m_Boss1,5 };
 			m_Archer1 = new Archer{ POINT{0,4},m_Grid1Ptr,m_Boss1,3 };
 
 			m_Grid1Ptr->AddBoss(m_Boss1);
@@ -63,8 +64,19 @@ void Game::Update(float elapsedSec)
 
 			m_Grid1Ptr->SetPattern(m_BossPatternPtr);
 			m_Grid1Ptr->CreateHeroOrder();
+
+
+			system("cls");
+			std::cout << "You managed to get killed, now starting level 2\n";
 			break;
+		case 3:
+			std::cout << "You completed all level. Congratulations!\n";
 		}
+	}
+
+	if (m_Grid1Ptr->IsLevelLost())
+	{
+		std::cout << "You lost, restart by pressing R\n";
 	}
 }
 
@@ -85,6 +97,7 @@ void Game::ProcessKeyUpEvent( const SDL_KeyboardEvent& e )
 	{
 	case SDLK_r:
 		Initialize();
+		system("cls");
 		break;
 	}
 }

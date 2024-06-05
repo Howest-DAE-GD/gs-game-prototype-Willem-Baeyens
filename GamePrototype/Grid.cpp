@@ -103,9 +103,19 @@ void Grid::Update(float elapsedSec)
 	}
 }
 
-bool Grid::IsLevelDone() const
+bool Grid::IsLevelWon() const
 {
 	return m_Boss->GetHealth() <= 0;
+}
+
+bool Grid::IsLevelLost() const
+{
+	for (int index{}; index < m_CreaturePtrVect.size(); ++index)
+	{
+		if(m_CreaturePtrVect[index]->IsDamagingHero()) return false;
+	}
+
+	return true;
 }
 
 void Grid::DoDamage(POINT gridPosition, int damage)
@@ -246,6 +256,19 @@ POINT Grid::GetBossPosition() const
 	return m_Boss->GetGridPosition();
 }
 
+void Grid::RemoveDeadHeroes()
+{
+	for (auto it{m_CreaturePtrVect.begin()}; it != m_CreaturePtrVect.end(); ++it)
+	{
+		if ((*it)->GetHealth() == 0)
+		{
+			m_CreaturePtrVect.erase(it);
+			RemoveDeadHeroes();
+			return;
+		}
+	}
+}
+
 void Grid::BossMove()
 {
 	if (not m_Boss->CheckMove(m_BossMove)) return;
@@ -275,6 +298,7 @@ void Grid::BossAttack()
 	m_TimerBetweenMoveAttack = 0.f;
 	m_Boss->Attack();
 	m_TimerBetweenAttack = { 0.0001f };
+
 }
 
 void Grid::HeroAttack()
@@ -288,6 +312,7 @@ void Grid::HeroAttack()
 	m_TimerBetweenAttack = { 0.f };
 	m_TurnInProgress = false;
 	std::cout << "Turn " << m_TurnCounter << "\n";
+	RemoveDeadHeroes();
 }
 
 void Grid::CheckIfAllFinished()

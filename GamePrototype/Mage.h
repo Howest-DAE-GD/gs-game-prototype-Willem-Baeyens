@@ -27,6 +27,11 @@ public:
 	virtual bool TurnDone() const override;
 
 	virtual int GetAttackPriority() const override;
+
+	virtual bool IsDamagingHero() const override;
+
+	virtual int GetHealth() const override;
+
 private:
 	void CalculateNextMove();
 

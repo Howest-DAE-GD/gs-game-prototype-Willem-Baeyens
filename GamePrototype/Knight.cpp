@@ -81,6 +81,11 @@ bool Knight::TurnDone() const
 	return true;
 }
 
+int Knight::GetHealth() const
+{
+	return m_CurrentHealth;
+}
+
 void Knight::DrawNextMoveArrow() const
 {
 	utils::SetColor(Color4f{ 0,0,0,1.f });

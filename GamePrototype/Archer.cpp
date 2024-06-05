@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Archer.h"
 #include <iostream>
+#include "utils.h"
 
 Archer::Archer(POINT gridPos, Grid* gridPtr, Boss* bossPtr, int health):
 	m_GridPosition{gridPos},
@@ -51,6 +52,7 @@ void Archer::Draw(Rectf rect) const
 
 	Creature::Draw(rect);
 	DrawHealth(rect, m_MaxHealth, m_CurrentHealth);
+	DrawMoveArrow();
 }
 
 void Archer::ArcherMove()
@@ -99,6 +101,16 @@ int Archer::GetMovePriority() const
 	return -1;
 }
 
+bool Archer::IsDamagingHero() const
+{
+	return true;
+}
+
+int Archer::GetHealth() const
+{
+	return m_CurrentHealth;
+}
+
 bool Archer::Step()
 {
 	POINT bossPos = m_Boss->GetGridPosition();
@@ -113,4 +125,36 @@ bool Archer::Step()
 		return true;
 	}
 	return false;
+}
+
+void Archer::DrawMoveArrow() const
+{
+	if (m_GridPosition.y == m_GridPtr->GetBossPosition().y) return;
+
+	Point2f currentCenter = utils::GetCenter(m_GridPtr->GetRectAtPosition(m_GridPosition));
+
+	Point2f corner1{}, corner2{}, corner3{currentCenter};
+	int length{ m_GridPtr->GetSquareSize() };
+
+	if (m_GridPosition.y > m_GridPtr->GetBossPosition().y)
+	{
+
+		corner3.y -= length * .3f;
+		corner1 = corner2 = corner3;
+		corner1.x -= 12;
+		corner2.x += 12;
+		corner1.y += length * 0.2f;
+		corner2.y += length * 0.2f;
+	}
+	else
+	{
+		corner3.y += length * .3f;
+		corner1 = corner2 = corner3;
+		corner1.x -= 12;
+		corner2.x += 12;
+		corner1.y -= length * 0.2f;
+		corner2.y -= length * 0.2f;
+	}
+	utils::SetColor(Color4f{ 0,0,0,1.f });
+	utils::FillPolygon(std::vector<Point2f>{corner1, corner3, corner2});
 }

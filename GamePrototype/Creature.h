@@ -22,6 +22,10 @@ public:
 
 	virtual void Move();
 	virtual void Attack();
+
+	virtual int GetHealth() const = 0;
+
+	virtual bool IsDamagingHero() const;
 private:
 };
 

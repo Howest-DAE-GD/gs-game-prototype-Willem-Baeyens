@@ -121,6 +121,16 @@ int Rogue::GetMovePriority() const
 	return 1;
 }
 
+bool Rogue::IsDamagingHero() const
+{
+	return true;
+}
+
+int Rogue::GetHealth() const
+{
+	return m_CurrentHealth;
+}
+
 bool Rogue::AllyInBossRange()
 {
 	std::vector<POINT> creaturePositions{ m_GridPtr->GetCreaturePositions() };

@@ -153,6 +153,16 @@ int Mage::GetAttackPriority() const
 	return 3;
 }
 
+bool Mage::IsDamagingHero() const
+{
+	return true;
+}
+
+int Mage::GetHealth() const
+{
+	return m_CurrentHealth;
+}
+
 void Mage::CalculateNextMove()
 {
 	bool possibleMove{ false };
