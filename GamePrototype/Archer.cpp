@@ -11,7 +11,8 @@ Archer::Archer(POINT gridPos, Grid* gridPtr, Boss* bossPtr, int health):
 	m_CurrentHealth{m_MaxHealth},
 	m_Color{ 74/255.f,103/255.f,65/255.f ,1.f},
 	m_Stepping{false},
-	m_StepTimer{0.f}
+	m_StepTimer{0.f},
+	m_ArrowVect{}
 {
 	m_InfoTexturePtr = new Texture("ArcherInfo.png");
 }
@@ -28,6 +29,12 @@ void Archer::Update(float elapsedSec)
 			m_StepTimer = 0.f;
 			m_Stepping = Step();
 		}
+	}
+
+	for (int index{}; index < m_ArrowVect.size(); ++index)
+	{
+		m_ArrowVect[index].Update(elapsedSec);
+		if(index == m_ArrowVect.size()-1) RemoveArrows();
 	}
 }
 
@@ -53,6 +60,10 @@ void Archer::Draw(Rectf rect) const
 	Creature::Draw(rect);
 	DrawHealth(rect, m_MaxHealth, m_CurrentHealth);
 	DrawMoveArrow();
+	for (int index{}; index < m_ArrowVect.size(); ++index)
+	{
+		m_ArrowVect[index].Draw();
+	}
 }
 
 void Archer::ArcherMove()
@@ -71,7 +82,19 @@ void Archer::Attack()
 	if (not IsAlive()) return;
 
 	POINT bossPos = m_Boss->GetGridPosition();
-	if (bossPos.y == m_GridPosition.y) m_Boss->TakeDamage(1);
+	if (bossPos.y == m_GridPosition.y)
+	{
+		m_Boss->TakeDamage(1);
+		Rectf archerRect{ m_GridPtr->GetRectAtPosition(m_GridPosition) };
+		Rectf bossRect{ m_GridPtr->GetRectAtPosition(m_GridPtr->GetBossPosition()) };
+		Point2f start = Point2f{ utils::GetCenter(archerRect)};
+		start.x += archerRect.width / 2;
+		Point2f end = Point2f{ utils::GetCenter(bossRect)};
+		end.x -= bossRect.width / 2;
+		m_ArrowVect.emplace_back(Arrow{ start,end });
+	}
+
+
 
 	ArcherMove();
 }
@@ -157,4 +180,17 @@ void Archer::DrawMoveArrow() const
 	}
 	utils::SetColor(Color4f{ 0,0,0,1.f });
 	utils::FillPolygon(std::vector<Point2f>{corner1, corner3, corner2});
+}
+
+void Archer::RemoveArrows()
+{
+	for (auto it{ m_ArrowVect.begin() }; it != m_ArrowVect.end(); ++it)
+	{
+		if ((*it).IsDone())
+		{
+			m_ArrowVect.erase(it);
+			RemoveArrows();
+			return;
+		}
+	}
 }

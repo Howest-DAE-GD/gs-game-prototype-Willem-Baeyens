@@ -1,6 +1,7 @@
 #pragma once
 #include "Grid.h"
 #include "Boss.h"
+#include "Arrow.h"
 class Archer final : public Creature
 {
 public:
@@ -34,6 +35,8 @@ private:
 
 	void DrawMoveArrow() const;
 
+	void RemoveArrows();
+
 	POINT	m_GridPosition;
 	Grid*	m_GridPtr;
 	Boss*	m_Boss;
@@ -44,5 +47,7 @@ private:
 	bool	m_Stepping;
 	float   m_StepTimer;
 	Texture* m_InfoTexturePtr;
+
+	std::vector<Arrow> m_ArrowVect;
 };
 
