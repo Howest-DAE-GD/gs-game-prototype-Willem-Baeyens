@@ -13,6 +13,7 @@ BossPatternDisplay::BossPatternDisplay(Point2f pos, const std::vector<BossMove>&
 	m_Letters.push_back(new Texture("\\",fontPath,fontSize,color));
 	m_Letters.push_back(new Texture("B", fontPath, fontSize, color));
 	m_Letters.push_back(new Texture("E", fontPath, fontSize, color));
+	m_Letters.push_back(new Texture("X", fontPath, fontSize, color));
 }
 
 void BossPatternDisplay::Draw() const
@@ -38,6 +39,10 @@ void BossPatternDisplay::Draw() const
 			break;
 		case BossMove::surroundingAttack:
 			letter = m_Letters[2];
+			break;
+		case BossMove::diagonalAttack:
+			letter = m_Letters[3];
+			xOffset += 4;
 			break;
 		default:
 			letter = m_Letters[0];

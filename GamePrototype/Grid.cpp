@@ -86,7 +86,7 @@ void Grid::Update(float elapsedSec)
 	if (m_TimerBetweenAttack > 0.f)
 	{
 		m_TimerBetweenAttack += elapsedSec;
-		if (m_TimerBetweenAttack > 0.2f) {
+		if (m_TimerBetweenAttack > 0.5f) {
 			HeroAttack();
 		}
 	}

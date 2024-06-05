@@ -17,7 +17,7 @@ Boss::Boss(POINT gridPos,Knight* knightPtr, Grid* gridPtr, int health):
 	m_Attacking{false},
 	m_DidDamage{false},
 	m_AttackLocations{},
-	m_AttackPatternVect{BossMove::null,BossMove::beamAttack,BossMove::null,BossMove::surroundingAttack},
+	m_AttackPatternVect{BossMove::null,BossMove::beamAttack,BossMove::surroundingAttack,BossMove::diagonalAttack},
 	m_AttackIndex{}
 {	
 	m_Rect = Rectf{ 600,200,100,100 };
@@ -140,14 +140,34 @@ void Boss::CometAttack()
 
 void Boss::SurroundingAttack()
 {
-	for (int rowIndex{ m_GridPosition.y - 1 }; rowIndex <= m_GridPosition.y + 1; ++rowIndex)
+	for (int rowIndex{ m_GridPosition.y - 2 }; rowIndex <= m_GridPosition.y + 2; ++rowIndex)
 	{
-		for (int columnIndex{ m_GridPosition.x - 1 }; columnIndex <= m_GridPosition.x + 1; ++columnIndex)
+		for (int columnIndex{ m_GridPosition.x - 2 }; columnIndex <= m_GridPosition.x + 2; ++columnIndex)
 		{
 			POINT location{ columnIndex,rowIndex };
 			if (location == m_GridPosition) continue;
 			m_AttackLocations.push_back(location);
 		}
+	}
+	m_DidDamage = false;
+}
+
+void Boss::DiagonalAttack()
+{
+	for (int index{ 1 }; index < m_GridPtr->GetRowCount(); ++index)
+	{
+		POINT location1{m_GridPosition};
+		POINT location2{ m_GridPosition };
+		POINT location3{ m_GridPosition };
+		POINT location4{ m_GridPosition };
+		location1 = location1 + POINT{-index, index};
+		location2 = location2 + POINT{ index, index };
+		location3 = location3 + POINT{ index, -index };
+		location4 = location4 + POINT{ -index, -index };
+		if (m_GridPtr->IsInGrid(location1)) m_AttackLocations.push_back(location1);
+		if (m_GridPtr->IsInGrid(location2)) m_AttackLocations.push_back(location2);
+		if (m_GridPtr->IsInGrid(location3)) m_AttackLocations.push_back(location3);
+		if (m_GridPtr->IsInGrid(location4)) m_AttackLocations.push_back(location4);
 	}
 	m_DidDamage = false;
 }
@@ -207,6 +227,10 @@ void Boss::Attack()
 		break;
 	case BossMove::surroundingAttack:
 		SurroundingAttack();
+		m_Attacking = true;
+		break;
+	case BossMove::diagonalAttack:
+		DiagonalAttack();
 		m_Attacking = true;
 		break;
 	}

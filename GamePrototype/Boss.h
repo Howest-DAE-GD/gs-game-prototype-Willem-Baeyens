@@ -5,7 +5,7 @@ class Grid;
 #include "Grid.h"
 enum class BossMove
 {
-	null,columnAttack,beamAttack,cometAttack,surroundingAttack
+	null,columnAttack,beamAttack,cometAttack,surroundingAttack,diagonalAttack
 };
 
 class Boss final : public Creature
@@ -29,6 +29,7 @@ public:
 	void ColumAttack();
 	void CometAttack();
 	void SurroundingAttack();
+	void DiagonalAttack();
 
 	void HitEnemies();
 
