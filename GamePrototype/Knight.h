@@ -24,6 +24,8 @@ public:
 	virtual bool TurnDone() const override;
 
 	virtual int GetHealth() const override;
+
+	virtual void PrintInfo() const override;
 private:
 	void DrawNextMoveArrow() const;
 

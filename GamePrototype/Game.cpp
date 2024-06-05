@@ -31,6 +31,8 @@ void Game::Initialize( )
 	m_BossPatternPtr = new BossPatternDisplay{ Point2f{ 760,60 },m_Boss2->GetPattern() };
 	m_Grid1Ptr->SetPattern(m_BossPatternPtr);
 	m_Grid1Ptr->CreateHeroOrder();
+
+	std::cout << "You have gained control of the villain. Your goal is the let the villain die to the NPC hero party. \nEach turn you can move using the arrow keys if you wish to take a turn without moving press enter. \nThe villain will automatically attack the heroes as indicated by the pattern on the right. \nYou can click on the heroes to get a short description of them.\n";
 }
 
 void Game::Cleanup( )

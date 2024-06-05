@@ -212,7 +212,7 @@ void Grid::Click(const SDL_MouseButtonEvent& e)
 	{
 		if (utils::IsPointInRect(mousePos, creatureGrids[index]))
 		{
-			m_CurrentInfoDisplay = GetCreatureAtPosition(positions[index]);
+			GetCreatureAtPosition(positions[index])->PrintInfo();
 			return;
 		}
 	}

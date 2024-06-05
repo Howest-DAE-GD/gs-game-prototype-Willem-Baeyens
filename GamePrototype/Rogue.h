@@ -29,6 +29,7 @@ public:
 	virtual bool IsDamagingHero() const override;
 	virtual int GetHealth() const override;
 
+	virtual void PrintInfo() const override;
 private:
 	bool AllyInBossRange();
 	void Step();

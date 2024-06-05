@@ -1,5 +1,6 @@
 #pragma once
 #include "Texture.h"
+#include <iostream>
 class Creature
 {
 public:
@@ -16,6 +17,7 @@ public:
 	virtual bool TurnDone() const = 0;
 
 	void DrawInfo() const;
+	virtual void PrintInfo() const;
 
 	virtual int GetAttackPriority() const;
 	virtual int GetMovePriority() const;

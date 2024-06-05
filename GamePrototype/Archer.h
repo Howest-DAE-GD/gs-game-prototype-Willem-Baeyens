@@ -29,6 +29,7 @@ public:
 
 	virtual int GetHealth() const override;
 
+	virtual void PrintInfo() const override;
 private:
 	void ArcherMove();
 	bool Step();

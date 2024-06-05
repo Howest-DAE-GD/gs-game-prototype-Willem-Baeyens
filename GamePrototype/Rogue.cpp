@@ -11,7 +11,8 @@ Rogue::Rogue(POINT gridPos, Grid* gridPtr, Boss* bossPtr,int health):
 	m_Color{ Color4f{ 2 / 255.f, 6 / 255.f, 23 / 255.f,1.f } },
 	m_ExtraStep{false},
 	m_ExtraStepTimer{0.f},
-	m_NextStep{}
+	m_NextStep{},
+	m_Rotating{}
 {
 	m_InfoTexturePtr = new Texture("RogueInfo.png");
 }
@@ -129,6 +130,11 @@ bool Rogue::IsDamagingHero() const
 int Rogue::GetHealth() const
 {
 	return m_CurrentHealth;
+}
+
+void Rogue::PrintInfo() const
+{
+	std::cout << "Moves towards the boss, can move 2 squares per turn.\nAttacks if orthogonally adjacent to the boss, deals increased damage if an ally is near the boss.\nWill Rotate around the boss if the boss remains stationary\n";
 }
 
 bool Rogue::AllyInBossRange()

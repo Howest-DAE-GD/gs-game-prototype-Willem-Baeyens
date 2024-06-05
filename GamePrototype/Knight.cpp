@@ -86,6 +86,11 @@ int Knight::GetHealth() const
 	return m_CurrentHealth;
 }
 
+void Knight::PrintInfo() const
+{
+	std::cout << "Moves up and down in a set pattern; blocking the Beam attack of the boss\n";
+}
+
 void Knight::DrawNextMoveArrow() const
 {
 	utils::SetColor(Color4f{ 0,0,0,1.f });

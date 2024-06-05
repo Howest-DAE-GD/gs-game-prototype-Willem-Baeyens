@@ -134,6 +134,11 @@ int Archer::GetHealth() const
 	return m_CurrentHealth;
 }
 
+void Archer::PrintInfo() const
+{
+	std::cout << "Stays in the backline. Each turn it will attack the boss if they're on the same horizontal line.\nMoves toward the boss after (attempted)attacking\n";
+}
+
 bool Archer::Step()
 {
 	POINT bossPos = m_Boss->GetGridPosition();

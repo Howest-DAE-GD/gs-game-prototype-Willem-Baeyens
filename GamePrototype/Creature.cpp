@@ -53,6 +53,10 @@ void Creature::DrawInfo() const
 	if(GetTexturePtr()) GetTexturePtr()->Draw(Rectf{100,250,600,200});
 }
 
+void Creature::PrintInfo() const
+{
+}
+
 int Creature::GetAttackPriority() const
 {
 	return 0;

@@ -163,6 +163,11 @@ int Mage::GetHealth() const
 	return m_CurrentHealth;
 }
 
+void Mage::PrintInfo() const
+{
+	std::cout << "Moves randomly, will shoot fireballs around the boss every 2 turns.\n";
+}
+
 void Mage::CalculateNextMove()
 {
 	bool possibleMove{ false };
