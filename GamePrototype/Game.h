@@ -36,19 +36,16 @@ private:
 	void Cleanup();
 	void ClearBackground() const;
 
-	void BossMove();
-	void HeroMove();
-	void BossAttack();
-	void HeroAttack();
-
-	void CheckIfAllFinished();
-
-	Mage* m_Mage;
-	Knight* m_Knight;
-	Rogue* m_Rogue;
-	Archer* m_Archer;
-	Boss* m_Boss;
-	Grid* m_Grid1Ptr;
+	Mage*	m_Mage1;
+	Knight* m_Knight1;
+	Rogue*	m_Rogue1;
+	Archer* m_Archer1;
+	Boss*	m_Boss1;
+	Grid*	m_Grid1Ptr;
+	
+	Mage*	m_Mage2;
+	Knight* m_Knight2;
+	Boss*	m_Boss2;
 
 	Creature* m_CurrentInfoDisplay{ nullptr };
 
@@ -63,4 +60,6 @@ private:
 
 	bool m_TurnInProgress{ false };
 	bool m_AllFinished{ true };
+
+	int m_Level{1};
 };

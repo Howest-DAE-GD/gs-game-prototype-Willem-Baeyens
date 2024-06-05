@@ -4,7 +4,7 @@
 class Rogue final : public Creature
 {
 public:
-	Rogue(POINT gridPos, Grid* gridPtr, Boss* bossPtr);
+	Rogue(POINT gridPos, Grid* gridPtr, Boss* bossPtr,int health);
 
 	virtual void Update(float elapsedSec) override;
 

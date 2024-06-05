@@ -2,13 +2,13 @@
 #include "Knight.h"
 #include "utils.h"
 
-Knight::Knight(POINT gridPos,Grid* GridPtr):
+Knight::Knight(POINT gridPos,Grid* GridPtr,int health):
 	m_GridPosition{gridPos},
 	m_Color{ 211,211,211,1},
 	m_NextMove{0,1},
 	m_GridPtr{GridPtr},
 	m_MaxRowIndex{ GridPtr->GetRowCount() - 1},
-	m_MaxHealth{10},
+	m_MaxHealth{health},
 	m_CurrentHealth{m_MaxHealth}
 {
 	m_InfoTexturePtr = new Texture("KnightInfo.png");

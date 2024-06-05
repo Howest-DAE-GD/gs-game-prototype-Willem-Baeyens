@@ -5,7 +5,7 @@
 class Mage final : public Creature
 {
 public:
-	Mage(POINT gridPosition, Grid* gridPtr);
+	Mage(POINT gridPosition, Grid* gridPtr, int health);
 
 	virtual void Draw(Rectf rect) const override;
 
@@ -26,6 +26,7 @@ public:
 
 	virtual bool TurnDone() const override;
 
+	virtual int GetAttackPriority() const override;
 private:
 	void CalculateNextMove();
 

@@ -22,6 +22,8 @@ public:
 
 	void Update(float elapsedSec);
 
+	bool IsLevelDone() const;
+
 	void DoDamage(POINT gridPosition, int damage);
 	int GetSquareSize() const;
 	Vector2f GetLocation() const;

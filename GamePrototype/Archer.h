@@ -4,7 +4,7 @@
 class Archer final : public Creature
 {
 public:
-	Archer(POINT gridPos, Grid* gridPtr, Boss* bossPtr);
+	Archer(POINT gridPos, Grid* gridPtr, Boss* bossPtr,int health);
 
 	virtual void Update(float elapsedSec) override;
 

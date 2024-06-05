@@ -3,7 +3,7 @@
 #include "utils.h"
 #include "Fireball.h"
 #include <iostream>
-Mage::Mage(POINT gridPos, Grid* gridPtr) :
+Mage::Mage(POINT gridPos, Grid* gridPtr,int health) :
 	m_GridPosition{ gridPos },
 	m_Color{ 1,0,1,1 },
 	m_GridPtr{ gridPtr },
@@ -12,7 +12,7 @@ Mage::Mage(POINT gridPos, Grid* gridPtr) :
 	m_Charging{ false },
 	m_FireballVect{},
 	m_LastBossPosition{ 0,1 },
-	m_MaxHealth{3},
+	m_MaxHealth{health},
 	m_CurrentHealth{m_MaxHealth}
 {
 	m_Rect = Rectf{ 200,200,50,50 };
@@ -52,7 +52,6 @@ void Mage::Move()
 
 	m_GridPosition = m_GridPosition + m_NextMove;
 	m_PreviousMove = m_NextMove;
-	CalculateNextMove();
 }
 
 void Mage::Attack()
@@ -110,6 +109,7 @@ void Mage::Attack()
 		}
 	}
 	m_Charging = !m_Charging;
+	CalculateNextMove();
 }
 
 void Mage::TakeDamage(int damage)
@@ -146,6 +146,11 @@ Texture* Mage::GetTexturePtr() const
 bool Mage::TurnDone() const
 {
 	return true;
+}
+
+int Mage::GetAttackPriority() const
+{
+	return 3;
 }
 
 void Mage::CalculateNextMove()

@@ -4,10 +4,10 @@
 #include "Knight.h"
 #include <iostream>
 
-Boss::Boss(POINT gridPos,Knight* knightPtr, Grid* gridPtr):
+Boss::Boss(POINT gridPos,Knight* knightPtr, Grid* gridPtr, int health):
 	m_Speed{200},
 	m_GridPosition{gridPos},
-	m_MaxHealth{20},
+	m_MaxHealth{health},
 	m_CurrentHealth{m_MaxHealth},
 	m_HealthBarRect{250.f,475.f,350.f,20.f},
 	m_KnightPtr{knightPtr},

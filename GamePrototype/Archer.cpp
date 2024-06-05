@@ -2,11 +2,11 @@
 #include "Archer.h"
 #include <iostream>
 
-Archer::Archer(POINT gridPos, Grid* gridPtr, Boss* bossPtr):
+Archer::Archer(POINT gridPos, Grid* gridPtr, Boss* bossPtr, int health):
 	m_GridPosition{gridPos},
 	m_GridPtr{gridPtr},
 	m_Boss{bossPtr},
-	m_MaxHealth{4},
+	m_MaxHealth{health},
 	m_CurrentHealth{m_MaxHealth},
 	m_Color{ 74/255.f,103/255.f,65/255.f ,1.f},
 	m_Stepping{false},

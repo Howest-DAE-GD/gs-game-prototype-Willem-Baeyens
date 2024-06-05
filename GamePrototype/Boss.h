@@ -11,7 +11,7 @@ enum class BossMove
 class Boss final : public Creature
 {
 public:
-	Boss(POINT gridPos, Knight* knightPtr, Grid* gridPtr);
+	Boss(POINT gridPos, Knight* knightPtr, Grid* gridPtr, int health);
 
 	virtual void Draw(Rectf rect) const override;
 	void DrawAttack() const;

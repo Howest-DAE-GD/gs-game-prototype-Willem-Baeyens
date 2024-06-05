@@ -2,11 +2,11 @@
 #include "Rogue.h"
 #include "utils.h"
 
-Rogue::Rogue(POINT gridPos, Grid* gridPtr, Boss* bossPtr):
+Rogue::Rogue(POINT gridPos, Grid* gridPtr, Boss* bossPtr,int health):
 	m_GridPosition{gridPos},
 	m_Boss{bossPtr},
 	m_GridPtr{gridPtr},
-	m_MaxHealth{5},
+	m_MaxHealth{health},
 	m_CurrentHealth{m_MaxHealth},
 	m_Color{ Color4f{ 2 / 255.f, 6 / 255.f, 23 / 255.f,1.f } },
 	m_ExtraStep{false},

@@ -103,6 +103,11 @@ void Grid::Update(float elapsedSec)
 	}
 }
 
+bool Grid::IsLevelDone() const
+{
+	return m_Boss->GetHealth() <= 0;
+}
+
 void Grid::DoDamage(POINT gridPosition, int damage)
 {
 	for (Creature* creaturePtr : m_CreaturePtrVect)

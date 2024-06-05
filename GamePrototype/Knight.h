@@ -5,7 +5,7 @@
 class Knight final : public Creature
 {
 public:
-	Knight(POINT gridPos,Grid* gridPtr);
+	Knight(POINT gridPos,Grid* gridPtr, int health);
 	
 	virtual void Update(float elapsedSec) override;
 
