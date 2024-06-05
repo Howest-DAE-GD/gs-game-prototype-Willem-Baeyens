@@ -1,5 +1,6 @@
 #pragma once
 #include "Boss.h"
+enum class BossMove;
 class BossPatternDisplay
 {
 public:

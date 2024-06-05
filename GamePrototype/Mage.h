@@ -9,7 +9,7 @@ public:
 
 	virtual void Draw(Rectf rect) const override;
 
-	void Update(float elapsedSec);
+	virtual void Update(float elapsedSec) override;
 
 	void Move();
 	void Attack();
@@ -25,8 +25,8 @@ public:
 
 
 	virtual bool TurnDone() const override;
-private:
 
+private:
 	void CalculateNextMove();
 
 	void DrawNextMoveArrow() const;

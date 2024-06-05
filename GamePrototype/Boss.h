@@ -1,8 +1,8 @@
 #pragma once
-#include "Vector2f.h"
+class Knight;
+class Grid;
 #include "Creature.h"
 #include "Grid.h"
-class Knight;
 enum class BossMove
 {
 	null,columnAttack,beamAttack,cometAttack,surroundingAttack
@@ -17,8 +17,6 @@ public:
 	void DrawAttack() const;
 
 	void Move(const Vector2f& change);
-
-	bool Update(const float elapsedSec);
 
 	virtual Color4f GetColor() const override;
 	virtual POINT GetGridPosition() const override;
@@ -44,6 +42,9 @@ public:
 	virtual bool TurnDone() const override;
 	
 	std::vector<BossMove> GetPattern() const;
+
+	virtual int GetAttackPriority() const override;
+	virtual int GetMovePriority() const override;
 private:
 	
 

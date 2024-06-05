@@ -1,12 +1,20 @@
 #include "pch.h"
 #include "Grid.h"
 #include "utils.h"
+#include <iostream>
+#include "Creature.h"
+
 
 Grid::Grid(int columnCount, int rowCount, int squareSize, Vector2f location):
 	m_ColumnCount{columnCount},
 	m_RowCount{rowCount},
 	m_SquareSize{squareSize},
-	m_Location{location}
+	m_Location{location},
+	m_TurnCounter{0},
+	m_Boss{nullptr},
+	m_HeroAttackOrder{},
+	m_HeroMoveOrder{},
+	m_BossPatternPtr{}
 {
 }
 
@@ -15,8 +23,20 @@ void Grid::AddCreature(Creature* creaturePtr)
 	m_CreaturePtrVect.push_back(creaturePtr);
 }
 
+void Grid::AddBoss(Boss* bossPtr)
+{
+	m_Boss = bossPtr;
+	AddCreature(bossPtr);
+}
+
+void Grid::SetPattern(BossPatternDisplay* patternPtr)
+{
+	m_BossPatternPtr = patternPtr;
+}
+
 void Grid::Draw() const
 {
+	m_Boss->Draw(GetRectAtPosition(m_Boss->GetGridPosition()));
 	utils::SetColor(Color4f{ 0.1f,0.1f,0.1f,1.f });
 	for (int rowIndex = 0; rowIndex < m_RowCount; ++rowIndex)
 	{
@@ -35,6 +55,51 @@ void Grid::Draw() const
 			continue;
 		}
 		creaturePtr->Draw(rect);
+	}
+
+	if (m_CurrentInfoDisplay)
+	{
+		m_CurrentInfoDisplay->DrawInfo();
+	}
+
+	m_BossPatternPtr->Draw();
+}
+
+void Grid::Update(float elapsedSec)
+{
+	if (m_CurrentInfoDisplay) return;
+
+	if (m_TimerBetweenMove > 0.f)
+	{
+		m_TimerBetweenMove += elapsedSec;
+		if (m_TimerBetweenMove > 0.5f) {
+			HeroMove();
+		}
+	}
+	if (m_TimerBetweenMoveAttack > 0.f)
+	{
+		m_TimerBetweenMoveAttack += elapsedSec;
+		if (m_TimerBetweenMoveAttack > 0.5f) {
+			BossAttack();
+		}
+	}
+	if (m_TimerBetweenAttack > 0.f)
+	{
+		m_TimerBetweenAttack += elapsedSec;
+		if (m_TimerBetweenAttack > 0.2f) {
+			HeroAttack();
+		}
+	}
+
+	for (int index{}; index < m_CreaturePtrVect.size(); ++index)
+	{
+		m_CreaturePtrVect[index]->Update(elapsedSec);
+	}
+
+	if (not m_TurnInProgress and not m_AllFinished)
+	{
+		CheckIfAllFinished();
+		if (m_AllFinished) m_BossPatternPtr->Turn();
 	}
 }
 
@@ -119,7 +184,7 @@ bool Grid::checkMoveHero(Creature* moving, POINT newPos)
 	return true;
 }
 
-Creature* Grid::Click(const SDL_MouseButtonEvent& e)
+void Grid::Click(const SDL_MouseButtonEvent& e)
 {
 	std::vector<Rectf> creatureGrids;
 	std::vector<POINT> positions{ GetCreaturePositions()};
@@ -132,8 +197,118 @@ Creature* Grid::Click(const SDL_MouseButtonEvent& e)
 	{
 		if (utils::IsPointInRect(mousePos, creatureGrids[index]))
 		{
-			return GetCreatureAtPosition(positions[index]);
+			m_CurrentInfoDisplay = GetCreatureAtPosition(positions[index]);
+			return;
 		}
 	}
-	return nullptr;
+	m_CurrentInfoDisplay = nullptr;
+}
+
+void Grid::ProcessKeyUpEvent(const SDL_KeyboardEvent& e)
+{
+	if (m_CurrentInfoDisplay) return;
+
+	if (m_Boss->GetHealth() <= 0) return;
+
+	if (not m_AllFinished) return;
+	switch (e.keysym.sym)
+	{
+	case SDLK_RETURN:
+		m_BossMove = {};
+		BossMove();
+		break;
+	case SDLK_LEFT:
+		m_BossMove = { -1,0 };
+		BossMove();
+		break;
+	case SDLK_RIGHT:
+		m_BossMove = { 1,0 };
+		BossMove();
+		break;
+	case SDLK_UP:
+		m_BossMove = { 0,1 };
+		BossMove();
+		break;
+	case SDLK_DOWN:
+		m_BossMove = { 0,-1 };
+		BossMove();
+		break;
+	}
+}
+
+POINT Grid::GetBossPosition() const
+{
+	return m_Boss->GetGridPosition();
+}
+
+void Grid::BossMove()
+{
+	if (not m_Boss->CheckMove(m_BossMove)) return;
+
+	++m_TurnCounter;
+	m_TurnInProgress = true;
+	m_AllFinished = false;
+
+	m_Boss->Move(m_BossMove);
+	m_BossMove = {};
+
+	m_TimerBetweenMove = { 0.0001f };
+}
+
+void Grid::HeroMove()
+{
+	m_TimerBetweenMove = 0.f;
+	for (auto it{ m_HeroMoveOrder.begin() }; it != m_HeroMoveOrder.end(); ++it)
+	{
+		(*it).second->Move();
+	}
+	m_TimerBetweenMoveAttack = { 0.0001f };
+}
+
+void Grid::BossAttack()
+{
+	m_TimerBetweenMoveAttack = 0.f;
+	m_Boss->Attack();
+	m_TimerBetweenAttack = { 0.0001f };
+}
+
+void Grid::HeroAttack()
+{
+	m_Boss->HitEnemies();
+	m_TimerBetweenAttack = 0.f;
+	for (auto it{ m_HeroAttackOrder.begin() }; it != m_HeroAttackOrder.end(); ++it)
+	{
+		(*it).second->Attack();
+	}
+	m_TimerBetweenAttack = { 0.f };
+	m_TurnInProgress = false;
+	std::cout << "Turn " << m_TurnCounter << "\n";
+}
+
+void Grid::CheckIfAllFinished()
+{
+	bool allFinished = true;
+	for (int index{}; index < m_CreaturePtrVect.size(); ++index)
+	{
+		if (not m_CreaturePtrVect[index]->TurnDone()) allFinished = false;
+	}
+	m_AllFinished = allFinished;
+}
+
+void Grid::CreateHeroOrder()
+{
+	for (int index{}; index < m_CreaturePtrVect.size(); ++index)
+	{
+		Creature* creaturePtr{ m_CreaturePtrVect[index] };
+		int attackPrio{ creaturePtr->GetAttackPriority() };
+		int movePrio{ creaturePtr->GetMovePriority() };
+		if (attackPrio != -1)
+		{
+			m_HeroAttackOrder.insert({ attackPrio,creaturePtr });
+		}
+		if (movePrio != -1)
+		{
+			m_HeroMoveOrder.insert({ attackPrio,creaturePtr });
+		}
+	}
 }

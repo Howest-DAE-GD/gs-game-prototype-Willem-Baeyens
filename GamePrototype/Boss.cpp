@@ -72,11 +72,6 @@ void Boss::Move(const Vector2f& change)
 	m_Rect += change;
 }
 
-bool Boss::Update(const float elapsedSec)
-{
-	return true;
-}
-
 Color4f Boss::GetColor() const
 {
 	return m_Color;
@@ -226,6 +221,16 @@ bool Boss::TurnDone() const
 std::vector<BossMove> Boss::GetPattern() const
 {
 	return m_AttackPatternVect;
+}
+
+int Boss::GetAttackPriority() const
+{
+	return -1;
+}
+
+int Boss::GetMovePriority() const
+{
+	return -1;
 }
 
 void Boss::IncrementAttackIndex()

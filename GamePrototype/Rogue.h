@@ -6,7 +6,7 @@ class Rogue final : public Creature
 public:
 	Rogue(POINT gridPos, Grid* gridPtr, Boss* bossPtr);
 
-	void Update(float elapsedSec);
+	virtual void Update(float elapsedSec) override;
 
 	virtual Color4f GetColor() const override;
 	virtual POINT GetGridPosition() const override;
@@ -15,13 +15,16 @@ public:
 
 	virtual void Draw(Rectf rect) const override;
 
-	void Move();
-	void Attack();
+	virtual void Move() override;
+	virtual void Attack() override;
 
 	virtual void TakeDamage(int damage);
 
 	bool IsAlive() const;
 	virtual bool TurnDone() const override;
+
+	virtual int GetAttackPriority() const override;
+	virtual int GetMovePriority() const override;
 
 private:
 	bool AllyInBossRange();

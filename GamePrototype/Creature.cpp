@@ -17,6 +17,10 @@ void Creature::Draw(Rectf rect) const
 	utils::FillRect(rect);
 }
 
+void Creature::Update(float elapsedSec)
+{
+}
+
 void Creature::TakeDamage(int damage)
 {
 }
@@ -47,4 +51,22 @@ void Creature::DrawInfo() const
 	//utils::FillRect(Rectf{ 100,250,650,150 });
 
 	if(GetTexturePtr()) GetTexturePtr()->Draw(Rectf{100,250,600,200});
+}
+
+int Creature::GetAttackPriority() const
+{
+	return 0;
+}
+
+int Creature::GetMovePriority() const
+{
+	return 0;
+}
+
+void Creature::Move()
+{
+}
+
+void Creature::Attack()
+{
 }

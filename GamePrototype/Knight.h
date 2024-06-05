@@ -7,7 +7,7 @@ class Knight final : public Creature
 public:
 	Knight(POINT gridPos,Grid* gridPtr);
 	
-	void Update(float elapsedSec);
+	virtual void Update(float elapsedSec) override;
 
 	virtual Color4f GetColor() const override;
 	virtual POINT GetGridPosition() const override;
@@ -15,8 +15,8 @@ public:
 
 	virtual void Draw(Rectf rect) const override;
 
-	void Move();
-	void Attack();
+	virtual void Move() override;
+	virtual void Attack() override;
 	virtual void TakeDamage(int damage);
 
 	bool IsAlive() const;

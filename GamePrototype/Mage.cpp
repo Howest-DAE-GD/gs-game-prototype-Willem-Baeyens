@@ -60,13 +60,47 @@ void Mage::Attack()
 	if (not IsAlive()) return;
 	if (m_Charging)
 	{
-		int columnCount{ m_GridPtr->GetColumnCount() };
-		for (int index{ m_AttackStart }; index < m_GridPtr->GetColumnCount() * m_GridPtr->GetRowCount(); index += 2)
+		POINT bossPos = m_GridPtr->GetBossPosition();
+		int direction1{}, direction2{};
+		while (direction1 == direction2)
 		{
-			POINT location{ index % columnCount,index / columnCount };
-			m_FireballVect.push_back(Fireball(location, m_GridPtr));
+			direction1 = { rand() % 4 };
+			direction2 = { rand() % 4 };
 		}
-		++m_AttackStart %= 2;
+		POINT location1{ bossPos }, location2{ bossPos };
+		switch (direction1)
+		{
+		case 0:
+			location1.y += 1;
+			break;
+		case 1:
+			location1.x += 1;
+			break;
+		case 2:
+			location1.y -= 1;
+			break;
+		case 3:
+			location1.x -= 1;
+			break;
+		}
+		switch (direction2)
+		{
+		case 0:
+			location2.y += 1;
+			break;
+		case 1:
+			location2.x += 1;
+			break;
+		case 2:
+			location2.y -= 1;
+			break;
+		case 3:
+			location2.x -= 1;
+			break;
+		}
+
+		m_FireballVect.push_back(Fireball(location1, m_GridPtr));
+		m_FireballVect.push_back(Fireball(location2, m_GridPtr));
 	}
 	else
 	{

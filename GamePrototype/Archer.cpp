@@ -53,7 +53,7 @@ void Archer::Draw(Rectf rect) const
 	DrawHealth(rect, m_MaxHealth, m_CurrentHealth);
 }
 
-void Archer::Move()
+void Archer::ArcherMove()
 {
 	if (not IsAlive()) return;
 
@@ -70,6 +70,8 @@ void Archer::Attack()
 
 	POINT bossPos = m_Boss->GetGridPosition();
 	if (bossPos.y == m_GridPosition.y) m_Boss->TakeDamage(1);
+
+	ArcherMove();
 }
 
 void Archer::TakeDamage(int damage)
@@ -85,6 +87,16 @@ bool Archer::IsAlive() const
 bool Archer::TurnDone() const
 {
 	return m_StepTimer == 0.f;
+}
+
+int Archer::GetAttackPriority() const
+{
+	return 2;
+}
+
+int Archer::GetMovePriority() const
+{
+	return -1;
 }
 
 bool Archer::Step()

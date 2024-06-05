@@ -111,6 +111,16 @@ bool Rogue::TurnDone() const
 	return m_ExtraStepTimer == 0.f;
 }
 
+int Rogue::GetAttackPriority() const
+{
+	return 1;
+}
+
+int Rogue::GetMovePriority() const
+{
+	return 1;
+}
+
 bool Rogue::AllyInBossRange()
 {
 	std::vector<POINT> creaturePositions{ m_GridPtr->GetCreaturePositions() };
