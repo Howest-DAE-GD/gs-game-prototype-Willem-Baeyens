@@ -260,7 +260,7 @@ void Grid::RemoveDeadHeroes()
 {
 	for (auto it{m_CreaturePtrVect.begin()}; it != m_CreaturePtrVect.end(); ++it)
 	{
-		if ((*it)->GetHealth() == 0)
+		if ((*it)->GetHealth() <= 0)
 		{
 			m_CreaturePtrVect.erase(it);
 			RemoveDeadHeroes();

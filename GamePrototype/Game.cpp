@@ -49,6 +49,7 @@ void Game::Update(float elapsedSec)
 		switch (m_Level)
 		{
 		case 2:
+			delete m_Grid1Ptr;
 			m_Grid1Ptr = new Grid(9, 5, 60, Vector2f{ 145, 120 });
 
 			m_Mage1 = new Mage{ POINT{1,3},m_Grid1Ptr,2 };
